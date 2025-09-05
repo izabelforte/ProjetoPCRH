@@ -10,7 +10,7 @@ namespace ProjetoPCRH.Models
         public int ProjetoId { get; set; }
         [Required]
         public string ProjetoName { get; set; }
-        public string? Descricao { get; set; }
+        public string Descricao { get; set; }
         [Column(TypeName = "date")]  // para guardar so a data sem horas
         public DateTime DataInicio { get; set; }
         [Column(TypeName = "date")]  // para guardar so a data sem horas
