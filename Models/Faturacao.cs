@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoPCRH.Models
@@ -8,15 +9,18 @@ namespace ProjetoPCRH.Models
     {
         [Key]
         public int FaturaId { get; set; }
+        [DisplayName("ID")]
 
         [Column(TypeName = "date")]  // para guardar so a data sem horas
         public DateTime DataFatura { get; set; }
+        [DisplayName("Data da Fatura")]
 
         public double Valor { get; set; }
+        [DisplayName("Valor")]
 
         [ForeignKey("ContratoId")]
         public int ContratoId { get; set; }
-        public Contrato contrato { get; set; }
+        public Contrato Contrato { get; set; }
 
     }
 }

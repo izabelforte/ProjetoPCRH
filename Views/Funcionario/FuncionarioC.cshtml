@@ -1,0 +1,44 @@
+﻿@model Funcionario
+<form method="post">
+    <div class="border pt-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create Category</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="FuncionarioId"></label>
+            <input asp-for="FuncionarioId" class="form-control" />
+            <span asp-validation-for="FuncionarioId" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="NomeFuncionario"></label>
+            <input asp-for="NomeFuncionario" class="form-control" />
+            <span asp-validation-for="NomeFuncionario" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Nif"></label>
+            <input asp-for="Nif" class="form-control" />
+            <span asp-validation-for="Nif" class="text-danger"></span>
+
+        </div>
+        <div class="mb-3">
+            <label asp-for="Cargo">></label>
+            <input asp-for="Cargo" class="form-control" />
+            <span asp-validation-for="Cargo" class="text-danger"></span>
+        </div>
+        <di class="mb-3">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Ativo"></label>
+            <input asp-for="Ativo" class="form-control" />"
+            <span asp-validation-for="Ativo" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-6"><button type="submit" class="btn btn-primary">Create</button></div>
+            <div class="col-6 text-end"><a asp-controller="Home" asp-action="Index" class=" btn btn-secondary">Back to List</a></div>
+        </div>
+</form>
