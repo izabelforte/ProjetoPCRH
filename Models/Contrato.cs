@@ -27,7 +27,7 @@ namespace ProjetoPCRH.Models
 
         [ForeignKey("ClienteId")]
         public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; }
+        public Cliente Cliente { get; set; } = null!;
 
 
         [ForeignKey("ProjetoId")]

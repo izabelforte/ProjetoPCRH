@@ -20,6 +20,7 @@ namespace ProjetoPCRH.Models
         [Required]
         [DisplayName("E-mail")]
         public string Email { get; set; }
-        
+        public ICollection<Contrato> Contratos { get; } = new List<Contrato>();
+
     }
 }
