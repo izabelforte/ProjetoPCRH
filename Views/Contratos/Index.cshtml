@@ -54,11 +54,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Projeto.NomeProjeto)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ContratoId">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.ContratoId">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.ContratoId">Eliminar</a>
-            </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ContratoId" class="btn btn-primary">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.ContratoId" class="btn btn-secondary">Detalhes</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ContratoId" class="btn btn-danger">Eliminar</a>
+                </td>
         </tr>
 }
     </tbody>

@@ -6,8 +6,9 @@
 
 <h1>Lista de Relatórios</h1>
 
+<br />
 <p>
-    <a asp-action="Create">Criar</a>
+    <a asp-action="Create" class="btn btn-success">Criar</a>
 </p>
 <table class="table">
     <thead>
@@ -42,11 +43,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Projeto.NomeProjeto)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RelatorioId">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.RelatorioId">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.RelatorioId">Eliminar</a>
-            </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.RelatorioId" class="btn btn-primary">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.RelatorioId" class="btn btn-secondary">Detalhes</a> |
+                    <a asp-action="Delete" asp-route-id="@item.RelatorioId" class="btn btn-danger">Eliminar</a>
+                </td>
         </tr>
 }
     </tbody>
