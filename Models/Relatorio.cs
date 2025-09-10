@@ -9,14 +9,14 @@ namespace ProjetoPCRH.Models
     {
         [Key]
         public int RelatorioId { get; set; }
-        [DisplayName("ID")]
 
+        [DisplayName("Data")]
         [Column(TypeName = "date")]  // para guardar so a data sem horas
         public DateTime DataRelatorio { get; set; }
-        [DisplayName("Data")]
 
-        public double Valor { get; set; }
         [DisplayName("Valor")]
+        public double Valor { get; set; }
+        
         public int TempoTotalHoras { get; set; }
 
         [ForeignKey("ProjetoId")]
