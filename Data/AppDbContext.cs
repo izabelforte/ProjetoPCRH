@@ -9,7 +9,7 @@ namespace ProjetoPCRH.Models
         public DbSet<Projeto> Projetos { get; set; }
         public DbSet<Contrato> Contratos { get; set; }
         public DbSet<Faturacao> Faturas { get; set; }
-        public DbSet<ProjetoFuncionario> ProjetosFuncionarios { get; set; }
+       
 
         public DbSet<Relatorio> Relatorios { get; set; }
         public DbSet<Utilizador> Utilizadores { get; set; }
@@ -28,8 +28,13 @@ namespace ProjetoPCRH.Models
         {
             base.OnModelCreating(modelBuilder);
             // Add your model configurations here
-           
+            modelBuilder.Entity<Contrato>() 
+             .HasOne(c => c.Projeto)
+             .WithMany()
+             .HasForeignKey(c => c.ProjetoId)
+             .OnDelete(DeleteBehavior.Restrict);
             
+        
 
         }
     

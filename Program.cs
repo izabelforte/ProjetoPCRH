@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using ProjetoPCRH.Models;
+
 namespace ProjetoPCRH
 {
     public class Program
@@ -8,6 +11,7 @@ namespace ProjetoPCRH
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
 
             var app = builder.Build();
 
