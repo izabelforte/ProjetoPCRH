@@ -9,23 +9,23 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
-    public class FaturacaosController : Controller
+    public class ProjetosController : Controller
     {
         private readonly AppDbContext _context;
 
-        public FaturacaosController(AppDbContext context)
+        public ProjetosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Faturacaos
+        // GET: Projetoes
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Faturas.Include(f => f.Contrato);
+            var appDbContext = _context.Projetos.Include(p => p.Cliente);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Faturacaos/Details/5
+        // GET: Projetoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +33,42 @@ namespace ProjetoPCRH.Controllers
                 return NotFound();
             }
 
-            var faturacao = await _context.Faturas
-                .Include(f => f.Contrato)
-                .FirstOrDefaultAsync(m => m.FaturaId == id);
-            if (faturacao == null)
+            var projeto = await _context.Projetos
+                .Include(p => p.Cliente)
+                .FirstOrDefaultAsync(m => m.ProjetoId == id);
+            if (projeto == null)
             {
                 return NotFound();
             }
 
-            return View(faturacao);
+            return View(projeto);
         }
 
-        // GET: Faturacaos/Create
+        // GET: Projetoes/Create
         public IActionResult Create()
         {
-            ViewData["ContratoId"] = new SelectList(_context.Contratos, "ContratoId", "ContratoId");
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
             return View();
         }
 
-        // POST: Faturacaos/Create
+        // POST: Projetoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FaturaId,DataFatura,Valor,ContratoId")] Faturacao faturacao)
+        public async Task<IActionResult> Create([Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(faturacao);
+                _context.Add(projeto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ContratoId"] = new SelectList(_context.Contratos, "ContratoId", "ContratoId", faturacao.ContratoId);
-            return View(faturacao);
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
+            return View(projeto);
         }
 
-        // GET: Faturacaos/Edit/5
+        // GET: Projetoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +76,23 @@ namespace ProjetoPCRH.Controllers
                 return NotFound();
             }
 
-            var faturacao = await _context.Faturas.FindAsync(id);
-            if (faturacao == null)
+            var projeto = await _context.Projetos.FindAsync(id);
+            if (projeto == null)
             {
                 return NotFound();
             }
-            ViewData["ContratoId"] = new SelectList(_context.Contratos, "ContratoId", "ContratoId", faturacao.ContratoId);
-            return View(faturacao);
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
+            return View(projeto);
         }
 
-        // POST: Faturacaos/Edit/5
+        // POST: Projetoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FaturaId,DataFatura,Valor,ContratoId")] Faturacao faturacao)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
         {
-            if (id != faturacao.FaturaId)
+            if (id != projeto.ProjetoId)
             {
                 return NotFound();
             }
@@ -101,12 +101,12 @@ namespace ProjetoPCRH.Controllers
             {
                 try
                 {
-                    _context.Update(faturacao);
+                    _context.Update(projeto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FaturacaoExists(faturacao.FaturaId))
+                    if (!ProjetoExists(projeto.ProjetoId))
                     {
                         return NotFound();
                     }
@@ -117,11 +117,11 @@ namespace ProjetoPCRH.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ContratoId"] = new SelectList(_context.Contratos, "ContratoId", "ContratoId", faturacao.ContratoId);
-            return View(faturacao);
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
+            return View(projeto);
         }
 
-        // GET: Faturacaos/Delete/5
+        // GET: Projetoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,35 +129,35 @@ namespace ProjetoPCRH.Controllers
                 return NotFound();
             }
 
-            var faturacao = await _context.Faturas
-                .Include(f => f.Contrato)
-                .FirstOrDefaultAsync(m => m.FaturaId == id);
-            if (faturacao == null)
+            var projeto = await _context.Projetos
+                .Include(p => p.Cliente)
+                .FirstOrDefaultAsync(m => m.ProjetoId == id);
+            if (projeto == null)
             {
                 return NotFound();
             }
 
-            return View(faturacao);
+            return View(projeto);
         }
 
-        // POST: Faturacaos/Delete/5
+        // POST: Projetoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var faturacao = await _context.Faturas.FindAsync(id);
-            if (faturacao != null)
+            var projeto = await _context.Projetos.FindAsync(id);
+            if (projeto != null)
             {
-                _context.Faturas.Remove(faturacao);
+                _context.Projetos.Remove(projeto);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FaturacaoExists(int id)
+        private bool ProjetoExists(int id)
         {
-            return _context.Faturas.Any(e => e.FaturaId == id);
+            return _context.Projetos.Any(e => e.ProjetoId == id);
         }
     }
 }

@@ -9,11 +9,11 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
-    public class UtilizadorsController : Controller
+    public class UtilizadoresController : Controller
     {
         private readonly AppDbContext _context;
 
-        public UtilizadorsController(AppDbContext context)
+        public UtilizadoresController(AppDbContext context)
         {
             _context = context;
         }
