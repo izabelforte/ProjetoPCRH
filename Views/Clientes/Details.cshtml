@@ -36,6 +36,37 @@
         </dd>
     </dl>
 </div>
+<h4>Contratos do Cliente</h4>
+@if (Model.Contratos != null && Model.Contratos.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descrição</th>
+                <th>Data Início</th>
+                <th>Data Fim</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contrato in Model.Contratos)
+            {
+                <tr>
+                    <td>@contrato.ContratoId</td>
+                    <td>@contrato.StatusContrato</td>
+                    <td>@contrato.DataInicio.ToShortDateString()</td>
+                    <td>@contrato.DataFim.ToShortDateString()</td>
+                    <td>@contrato.Valor.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Este cliente ainda não tem contratos.</p>
+}
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ClienteId">Edit</a> |
     <a asp-action="Index">Back to List</a>
