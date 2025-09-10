@@ -28,14 +28,11 @@ namespace ProjetoPCRH.Models
         {
             base.OnModelCreating(modelBuilder);
             // Add your model configurations here
-            modelBuilder.Entity<Contrato>() 
-             .HasOne(c => c.Projeto)
+            modelBuilder.Entity<Contrato>()           
+              .HasOne(c => c.Projeto)
              .WithMany()
              .HasForeignKey(c => c.ProjetoId)
              .OnDelete(DeleteBehavior.Restrict);
-            
-        
-
         }
     
 }
