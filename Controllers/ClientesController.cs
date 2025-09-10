@@ -33,7 +33,8 @@ namespace ProjetoPCRH.Controllers
             }
 
             var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.ClienteId == id);
+                .Include(c => c.Contratos) // <--- Aqui incluímos os contratos
+            .FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente == null)
             {
                 return NotFound();
