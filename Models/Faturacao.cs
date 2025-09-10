@@ -9,14 +9,15 @@ namespace ProjetoPCRH.Models
     {
         [Key]
         public int FaturaId { get; set; }
-        [DisplayName("ID")]
-
+      
+        [DisplayName("Data da Fatura")]
         [Column(TypeName = "date")]  // para guardar so a data sem horas
         public DateTime DataFatura { get; set; }
-        [DisplayName("Data da Fatura")]
 
-        public double Valor { get; set; }
         [DisplayName("Valor")]
+        public double Valor { get; set; }
+
+        
 
         [ForeignKey("ContratoId")]
         public int ContratoId { get; set; }

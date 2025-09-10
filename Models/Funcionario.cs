@@ -9,22 +9,26 @@ namespace ProjetoPCRH.Models
     {
         [Key]
         public int FuncionarioId { get; set; }
-        [DisplayName("ID")]
+      
         [Required]
-        public string NomeFuncionario { get; set; }
         [DisplayName("Nome do Funcionário")]
+        public string NomeFuncionario { get; set; }
+      
         [Required]
-        public string Nif { get; set; }
         [DisplayName("NIF")]
 
-        public string Cargo { get; set; }
-        [DisplayName("Cargo")]
+        public string Nif { get; set; }
 
-        public string Email { get; set; }
+        [DisplayName("Cargo")]
+        public string Cargo { get; set; }
+
         [DisplayName("E-mail")]
+        public string Email { get; set; }
+
+        [DisplayName("Data de Admissão")]
         [Column(TypeName = "date")]  // para guardar so a data sem horas
         public DateTime DataAdmissao { get; set; }
-        [DisplayName("Data de Admissão")]
+   
 
         public bool Ativo { get; set; }  //O EF vai mapear para bit no SQL Server (que armazena 0 ou 1).
 
