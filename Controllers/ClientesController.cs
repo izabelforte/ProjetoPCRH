@@ -33,7 +33,8 @@ namespace ProjetoPCRH.Controllers
             }
 
             var cliente = await _context.Clientes
-                .Include(c => c.Contratos) // <--- Aqui incluímos os contratos
+                .Include(c => c.Contratos)
+                    .ThenInclude(ct => ct.Faturacoes)
             .FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente == null)
             {

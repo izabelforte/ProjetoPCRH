@@ -1,10 +1,10 @@
 ﻿@model ProjetoPCRH.Models.Cliente
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes";
 }
 
-<h1>Details</h1>
+<h1>Detalhes</h1>
 
 <div>
     <h4>Cliente</h4>
@@ -39,19 +39,21 @@
 <h4>Contratos do Cliente</h4>
 @if (Model.Contratos != null && Model.Contratos.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Descrição</th>
-                <th>Data Início</th>
-                <th>Data Fim</th>
-                <th>Valor</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var contrato in Model.Contratos)
-            {
+    @foreach (var contrato in Model.Contratos)
+    {
+        
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Status</th>
+                    <th>Data Início</th>
+                    <th>Data Fim</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr>
                     <td>@contrato.ContratoId</td>
                     <td>@contrato.StatusContrato</td>
@@ -59,10 +61,39 @@
                     <td>@contrato.DataFim.ToShortDateString()</td>
                     <td>@contrato.Valor.ToString("C")</td>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+
+        <h4>Faturações</h4>
+        @if (contrato.Faturacoes != null && contrato.Faturacoes.Any())
+        {
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Fatura Nº</th>
+                        <th>Data</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fatura in contrato.Faturacoes)
+                    {
+                        <tr>
+                            <td>@fatura.FaturaId</td>
+                            <td>@fatura.DataFatura.ToShortDateString()</td>
+                            <td>@fatura.Valor.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Sem faturas para este contrato.</p>
+        }
+    }
 }
+
 else
 {
     <p>Este cliente ainda não tem contratos.</p>

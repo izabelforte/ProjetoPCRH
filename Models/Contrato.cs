@@ -33,5 +33,7 @@ namespace ProjetoPCRH.Models
         [ForeignKey("ProjetoId")]
         public int ProjetoId { get; set; }
         public Projeto Projeto { get; set; }
+        public virtual ICollection<Faturacao> Faturacoes { get; set; }
+        
     }
 }
