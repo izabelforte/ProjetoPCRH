@@ -10,9 +10,10 @@ namespace ProjetoPCRH
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
-
+            builder.Services.AddSession(); // habilitar sessões
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -25,14 +26,14 @@ namespace ProjetoPCRH
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession(); // ativar sessões antes do UseEndpoints
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }
