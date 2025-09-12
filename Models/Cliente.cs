@@ -22,5 +22,7 @@ namespace ProjetoPCRH.Models
         public string Email { get; set; }
         public virtual ICollection<Contrato> Contratos { get; set; }
 
+        
+
     }
 }
