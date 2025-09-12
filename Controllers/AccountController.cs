@@ -1,9 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly AppDbContext _context;
+
+        public AccountController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -13,11 +21,13 @@ namespace ProjetoPCRH.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            // Exemplo simples: utilizador fixo
-            if (username == "admin" && password == "1234")
+            var utilizador = _context.Utilizadores
+                .FirstOrDefault(u => u.Username == username && u.Password == password);
+
+            if (utilizador != null)
             {
-                // Guardar login em sessão
-                HttpContext.Session.SetString("User", username);
+                HttpContext.Session.SetString("User", utilizador.Username);
+                HttpContext.Session.SetString("Tipo", utilizador.Tipo);
 
                 return RedirectToAction("Index", "Home");
             }

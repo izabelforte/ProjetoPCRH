@@ -15,8 +15,7 @@ namespace ProjetoPCRH.Controllers
 
         public IActionResult Index()
         {
-            var user = HttpContext.Session.GetString("User");
-            if (user == null)
+            if (HttpContext.Session.GetString("User") == null)
             {
                 return RedirectToAction("Login", "Account");
             }
