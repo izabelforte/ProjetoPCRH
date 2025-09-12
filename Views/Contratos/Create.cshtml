@@ -1,7 +1,7 @@
 ﻿@model ProjetoPCRH.Models.Contrato
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Criar contrato";
 }
 
 <h1>Create</h1>
@@ -41,14 +41,14 @@
                 <select asp-for="ProjetoId" class ="form-control" asp-items="ViewBag.ProjetoId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Criar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Voltar à lista</a>
 </div>
 
 @section Scripts {
