@@ -15,13 +15,15 @@ namespace ProjetoPCRH.Controllers
 
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("User") == null)
+            var utilizadores = HttpContext.Session.GetString("Utilizadores");
+            if (string.IsNullOrEmpty(utilizadores))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             return View();
         }
+
 
         public IActionResult Privacy()
         {

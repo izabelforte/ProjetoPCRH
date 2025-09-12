@@ -1,6 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    var tipoUtilizadores = HttpContextAccessor.HttpContext.Session.GetString("TipoUtilizadores");
+    var utilizadores = HttpContextAccessor.HttpContext.Session.GetString("Utilizadores");
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,34 +28,65 @@
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (HttpContextAccessor.HttpContext.Session.GetString("User") != null)
+                        @if (!string.IsNullOrEmpty(utilizadores))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Clientes" asp-action="Index"><strong>Clientes</strong></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Contratos" asp-action="Index"><strong>Contratos</strong></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Faturacoes" asp-action="Index"><strong>Faturação</strong></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Funcionarios" asp-action="Index"><strong>Funcionários</strong></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Projetos" asp-action="Index"><strong>Projetos</strong></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Relatorios" asp-action="Index"><strong>Relatórios</strong></a>
-                            </li>
+                            @* Admin: acesso a todas as abas indicadas *@
+                            if (tipoUtilizadores == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Clientes" asp-action="Index"><strong>Clientes</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Contratos" asp-action="Index"><strong>Contratos</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Faturacoes" asp-action="Index"><strong>Faturação</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Funcionarios" asp-action="Index"><strong>Funcionários</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Projetos" asp-action="Index"><strong>Projetos</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Relatorios" asp-action="Index"><strong>Relatórios</strong></a>
+                                </li>
+                            }
+                            @* Gestor de Projeto *@
+                            else if (tipoUtilizadores == "GestorProjeto")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Projetos" asp-action="Index"><strong>Projetos</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Contratos" asp-action="Index"><strong>Contratos</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Relatorios" asp-action="Index"><strong>Relatórios</strong></a>
+                                </li>
+                            }
+                            @* Funcionario *@
+                            else if (tipoUtilizadores == "Func")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Projetos" asp-action="MeusProjetos"><strong>Meus Projetos</strong></a>
+                                </li>
+                            }
+                            @* Cliente *@
+                            else if (tipoUtilizadores == "Cliente")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Relatorios" asp-action="MeusRelatorios"><strong>Meus Relatórios</strong></a>
+                                </li>
+                            }
                         }
                     </ul>
 
                     <ul class="navbar-nav">
-                        @if (HttpContextAccessor.HttpContext.Session.GetString("User") != null)
+                        @if (!string.IsNullOrEmpty(utilizadores))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-light" asp-controller="Account" asp-action="Logout">Logout (@utilizadores)</a>
                             </li>
                         }
                         else
@@ -64,6 +100,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -75,6 +112,7 @@
             &copy; 2025 - ProjetoPCRH - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
