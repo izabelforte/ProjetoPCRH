@@ -9,8 +9,11 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
+
+    [AuthorizeRole("Admin")]
     public class ClientesController : Controller
     {
+
         private readonly AppDbContext _context;
 
         public ClientesController(AppDbContext context)

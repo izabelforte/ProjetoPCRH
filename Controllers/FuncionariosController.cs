@@ -9,6 +9,7 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
+    [AuthorizeRole("Admin")]
     public class FuncionariosController : Controller
     {
         private readonly AppDbContext _context;

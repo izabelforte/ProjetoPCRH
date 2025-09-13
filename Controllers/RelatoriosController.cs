@@ -19,6 +19,7 @@ namespace ProjetoPCRH.Controllers
         }
 
         // GET: Relatorios
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Relatorios.Include(r => r.Projeto);
@@ -26,25 +27,22 @@ namespace ProjetoPCRH.Controllers
         }
 
         // GET: Relatorios/Details/5
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var relatorio = await _context.Relatorios
                 .Include(r => r.Projeto)
                 .FirstOrDefaultAsync(m => m.RelatorioId == id);
-            if (relatorio == null)
-            {
-                return NotFound();
-            }
+
+            if (relatorio == null) return NotFound();
 
             return View(relatorio);
         }
 
         // GET: Relatorios/Create
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public IActionResult Create()
         {
             ViewData["ProjetoId"] = new SelectList(_context.Projetos, "ProjetoId", "NomeProjeto");
@@ -52,10 +50,9 @@ namespace ProjetoPCRH.Controllers
         }
 
         // POST: Relatorios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Create([Bind("RelatorioId,DataRelatorio,Valor,TempoTotalHoras,ProjetoId")] Relatorio relatorio)
         {
             if (ModelState.IsValid)
@@ -69,33 +66,25 @@ namespace ProjetoPCRH.Controllers
         }
 
         // GET: Relatorios/Edit/5
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var relatorio = await _context.Relatorios.FindAsync(id);
-            if (relatorio == null)
-            {
-                return NotFound();
-            }
+            if (relatorio == null) return NotFound();
+
             ViewData["ProjetoId"] = new SelectList(_context.Projetos, "ProjetoId", "NomeProjeto", relatorio.ProjetoId);
             return View(relatorio);
         }
 
         // POST: Relatorios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Edit(int id, [Bind("RelatorioId,DataRelatorio,Valor,TempoTotalHoras,ProjetoId")] Relatorio relatorio)
         {
-            if (id != relatorio.RelatorioId)
-            {
-                return NotFound();
-            }
+            if (id != relatorio.RelatorioId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -106,14 +95,8 @@ namespace ProjetoPCRH.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RelatorioExists(relatorio.RelatorioId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!RelatorioExists(relatorio.RelatorioId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -122,20 +105,16 @@ namespace ProjetoPCRH.Controllers
         }
 
         // GET: Relatorios/Delete/5
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var relatorio = await _context.Relatorios
                 .Include(r => r.Projeto)
                 .FirstOrDefaultAsync(m => m.RelatorioId == id);
-            if (relatorio == null)
-            {
-                return NotFound();
-            }
+
+            if (relatorio == null) return NotFound();
 
             return View(relatorio);
         }
@@ -143,6 +122,7 @@ namespace ProjetoPCRH.Controllers
         // POST: Relatorios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var relatorio = await _context.Relatorios.FindAsync(id);
@@ -150,7 +130,6 @@ namespace ProjetoPCRH.Controllers
             {
                 _context.Relatorios.Remove(relatorio);
             }
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -161,3 +140,4 @@ namespace ProjetoPCRH.Controllers
         }
     }
 }
+

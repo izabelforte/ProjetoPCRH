@@ -18,44 +18,41 @@ namespace ProjetoPCRH.Controllers
             _context = context;
         }
 
-        // GET: Projetoes
+        // GET: Projetos
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Projetos.Include(p => p.Cliente);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Projetoes/Details/5
+        // GET: Projetos/Details/5
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var projeto = await _context.Projetos
                 .Include(p => p.Cliente)
                 .FirstOrDefaultAsync(m => m.ProjetoId == id);
-            if (projeto == null)
-            {
-                return NotFound();
-            }
+
+            if (projeto == null) return NotFound();
 
             return View(projeto);
         }
 
-        // GET: Projetoes/Create
+        // GET: Projetos/Create
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
             return View();
         }
 
-        // POST: Projetoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Projetos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Create([Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
         {
             if (ModelState.IsValid)
@@ -68,34 +65,26 @@ namespace ProjetoPCRH.Controllers
             return View(projeto);
         }
 
-        // GET: Projetoes/Edit/5
+        // GET: Projetos/Edit/5
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var projeto = await _context.Projetos.FindAsync(id);
-            if (projeto == null)
-            {
-                return NotFound();
-            }
+            if (projeto == null) return NotFound();
+
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
             return View(projeto);
         }
 
-        // POST: Projetoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Projetos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Edit(int id, [Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
         {
-            if (id != projeto.ProjetoId)
-            {
-                return NotFound();
-            }
+            if (id != projeto.ProjetoId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -106,14 +95,8 @@ namespace ProjetoPCRH.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjetoExists(projeto.ProjetoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ProjetoExists(projeto.ProjetoId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -121,37 +104,31 @@ namespace ProjetoPCRH.Controllers
             return View(projeto);
         }
 
-        // GET: Projetoes/Delete/5
+        // GET: Projetos/Delete/5
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var projeto = await _context.Projetos
                 .Include(p => p.Cliente)
                 .FirstOrDefaultAsync(m => m.ProjetoId == id);
-            if (projeto == null)
-            {
-                return NotFound();
-            }
+
+            if (projeto == null) return NotFound();
 
             return View(projeto);
         }
 
-        // POST: Projetoes/Delete/5
+        // POST: Projetos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizeRole("Admin", "GestorProjeto")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var projeto = await _context.Projetos.FindAsync(id);
-            if (projeto != null)
-            {
-                _context.Projetos.Remove(projeto);
-            }
-
+            if (projeto != null) _context.Projetos.Remove(projeto);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

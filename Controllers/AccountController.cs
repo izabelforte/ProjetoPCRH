@@ -42,5 +42,11 @@ namespace ProjetoPCRH.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+
+        public IActionResult acessoNegado()
+        {
+            return View();
+        }
+
     }
 }
