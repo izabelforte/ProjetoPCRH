@@ -31,7 +31,7 @@
                         @if (!string.IsNullOrEmpty(utilizadores))
                         {
                             @* Admin: acesso a todas as abas indicadas *@
-                            if (tipoUtilizadores == "Admin")
+                            if (tipoUtilizadores == "Administrador")
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Clientes" asp-action="Index"><strong>Clientes</strong></a>
@@ -69,7 +69,7 @@
                                 </li>
                             }
                             @* Funcionario *@
-                            else if (tipoUtilizadores == "Func")
+                            else if (tipoUtilizadores == "Funcionario")
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-area="" asp-controller="Projetos" asp-action="MeusProjetos"><strong>Meus Projetos</strong></a>

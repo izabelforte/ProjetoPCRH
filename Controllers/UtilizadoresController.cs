@@ -10,8 +10,12 @@ using ProjetoPCRH.Models.ViewModels;
 
 namespace ProjetoPCRH.Controllers
 {
+
+    [AuthorizeRole("Administrador")]
+
     public class UtilizadoresController : Controller
     {
+
         private readonly AppDbContext _context;
 
         public UtilizadoresController(AppDbContext context)

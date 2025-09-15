@@ -19,7 +19,7 @@ namespace ProjetoPCRH.Controllers
         }
 
         // GET: Relatorios
-        [AuthorizeRole("Admin", "GestorProjeto")]
+        [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Relatorios.Include(r => r.Projeto);

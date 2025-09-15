@@ -28,7 +28,7 @@ namespace ProjetoPCRH.Controllers
             {
                 // Guardar na sessão com os nomes corretos
                 HttpContext.Session.SetString("Utilizadores", utilizador.Username);
-                HttpContext.Session.SetString("TipoUtilizadores", utilizador.Tipo); // Admin, GestorProjeto, Func, Cliente
+                HttpContext.Session.SetString("TipoUtilizadores", utilizador.Tipo); // Administrador, GestorProjeto, Funcionario, Cliente
 
                 return RedirectToAction("Index", "Home");
             }
