@@ -1,4 +1,4 @@
-﻿@model ProjetoPCRH.Models.Utilizador
+﻿@model ProjetoPCRH.Models.ViewModels.UtilizadorCreateViewModel
 
 @{
     ViewData["Title"] = "Criar Utilizador";
@@ -13,20 +13,45 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <label asp-for="Utilizador.Username" class="control-label"></label>
+                <input asp-for="Utilizador.Username" class="form-control" />
+                <span asp-validation-for="Utilizador.Username" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="Utilizador.Password" class="control-label"></label>
+                <input asp-for="Utilizador.Password" class="form-control" />
+                <span asp-validation-for="Utilizador.Password" class="text-danger"></span>
             </div>
+           
+
             <div class="form-group">
-                <label asp-for="Tipo" class="control-label"></label>
-                <input asp-for="Tipo" class="form-control" />
-                <span asp-validation-for="Tipo" class="text-danger"></span>
+                <label asp-for="Utilizador.Tipo" class="control-label"></label>
+                <select asp-for="Utilizador.Tipo" class="form-control" id="tipoSelect">
+                    <option value="">-- Selecione --</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Funcionario">Funcionario</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
+                <span asp-validation-for="Utilizador.Tipo" class="text-danger"></span>
             </div>
+            <div class="form-group" id="funcionarioSelect" style="display:none;">
+                <label asp-for="Utilizador.FuncionarioId" class="control-label">Funcionário</label>
+                <select asp-for="Utilizador.FuncionarioId" class="form-control"
+                        asp-items="@(new SelectList(Model.Funcionarios, "FuncionarioId", "NomeFuncionario"))">
+                    <option value="">-- Selecione o Funcionário --</option>
+                </select>
+                <span asp-validation-for="Utilizador.FuncionarioId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" id="clienteSelect" style="display:none;">
+                <label asp-for="Utilizador.ClienteId" class="control-label">Cliente</label>
+                <select asp-for="Utilizador.ClienteId" class="form-control"
+                        asp-items="@(new SelectList(Model.Clientes, "ClienteId", "NomeCliente"))">
+                    <option value="">-- Selecione o Cliente --</option>
+                </select>
+                <span asp-validation-for="Utilizador.ClienteId" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Criar" class="btn btn-primary" />
             </div>
@@ -40,4 +65,41 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tipoSelect = document.getElementById("tipoSelect");
+            const funcionarioSelect = document.getElementById("funcionarioSelect");
+            const clienteSelect = document.getElementById("clienteSelect");
+
+            // Função para mostrar/ocultar campos baseado no tipo selecionado
+            function toggleFields() {
+                const tipo = tipoSelect.value;
+
+                // Ocultar todos os campos primeiro
+                funcionarioSelect.style.display = "none";
+                clienteSelect.style.display = "none";
+
+                // Limpar valores dos campos não utilizados
+                if (tipo !== "Funcionario") {
+                    document.querySelector('select[name="Utilizador.FuncionarioId"]').value = "";
+                }
+                if (tipo !== "Cliente") {
+                    document.querySelector('select[name="Utilizador.ClienteId"]').value = "";
+                }
+
+                // Mostrar o campo apropriado
+                if (tipo === "Funcionario") {
+                    funcionarioSelect.style.display = "block";
+                } else if (tipo === "Cliente") {
+                    clienteSelect.style.display = "block";
+                }
+            }
+
+            // Adicionar event listener
+            tipoSelect.addEventListener("change", toggleFields);
+
+            // Executar uma vez no carregamento da página (caso haja valor pré-selecionado)
+            toggleFields();
+        });
+    </script>
 }

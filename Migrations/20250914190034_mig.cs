@@ -46,21 +46,6 @@ namespace ProjetoPCRH.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Utilizadores",
-                columns: table => new
-                {
-                    UtilizadorId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Utilizadores", x => x.UtilizadorId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projetos",
                 columns: table => new
                 {
@@ -83,6 +68,33 @@ namespace ProjetoPCRH.Migrations
                         principalTable: "Clientes",
                         principalColumn: "ClienteId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Utilizadores",
+                columns: table => new
+                {
+                    UtilizadorId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FuncionarioId = table.Column<int>(type: "int", nullable: true),
+                    ClienteId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Utilizadores", x => x.UtilizadorId);
+                    table.ForeignKey(
+                        name: "FK_Utilizadores_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "ClienteId");
+                    table.ForeignKey(
+                        name: "FK_Utilizadores_Funcionarios_FuncionarioId",
+                        column: x => x.FuncionarioId,
+                        principalTable: "Funcionarios",
+                        principalColumn: "FuncionarioId");
                 });
 
             migrationBuilder.CreateTable(
@@ -211,6 +223,16 @@ namespace ProjetoPCRH.Migrations
                 name: "IX_Relatorios_ProjetoId",
                 table: "Relatorios",
                 column: "ProjetoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Utilizadores_ClienteId",
+                table: "Utilizadores",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Utilizadores_FuncionarioId",
+                table: "Utilizadores",
+                column: "FuncionarioId");
         }
 
         /// <inheritdoc />

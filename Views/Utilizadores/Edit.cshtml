@@ -1,4 +1,4 @@
-﻿@model ProjetoPCRH.Models.Utilizador
+﻿@model ProjetoPCRH.Models.ViewModels.UtilizadorCreateViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,21 +12,22 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="UtilizadorId" />
+            <input type="hidden" asp-for="Utilizador.UtilizadorId" />
             <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <input type="hidden" asp-for="Utilizador.UtilizadorId" />
+                <label asp-for="Utilizador.Username" class="control-label"></label>
+                <input asp-for="Utilizador.Username" class="form-control" />
+                <span asp-validation-for="Utilizador.Username" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="Utilizador.Password" class="control-label"></label>
+                <input asp-for="Utilizador.Password" class="form-control" />
+                <span asp-validation-for="Utilizador.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Tipo" class="control-label"></label>
-                <input asp-for="Tipo" class="form-control" />
-                <span asp-validation-for="Tipo" class="text-danger"></span>
+                <label asp-for="Utilizador.Tipo" class="control-label"></label>
+                <input asp-for="Utilizador.Tipo" class="form-control" />
+                <span asp-validation-for="Utilizador.Tipo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

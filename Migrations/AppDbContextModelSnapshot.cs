@@ -235,6 +235,12 @@ namespace ProjetoPCRH.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UtilizadorId"));
 
+                    b.Property<int?>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FuncionarioId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -248,6 +254,10 @@ namespace ProjetoPCRH.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UtilizadorId");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("FuncionarioId");
 
                     b.ToTable("Utilizadores");
                 });
@@ -289,7 +299,7 @@ namespace ProjetoPCRH.Migrations
             modelBuilder.Entity("ProjetoPCRH.Models.Faturacao", b =>
                 {
                     b.HasOne("ProjetoPCRH.Models.Contrato", "Contrato")
-                        .WithMany()
+                        .WithMany("Faturacoes")
                         .HasForeignKey("ContratoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -319,9 +329,29 @@ namespace ProjetoPCRH.Migrations
                     b.Navigation("Projeto");
                 });
 
+            modelBuilder.Entity("ProjetoPCRH.Models.Utilizador", b =>
+                {
+                    b.HasOne("ProjetoPCRH.Models.Cliente", "UserCliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId");
+
+                    b.HasOne("ProjetoPCRH.Models.Funcionario", "UserFuncionario")
+                        .WithMany()
+                        .HasForeignKey("FuncionarioId");
+
+                    b.Navigation("UserCliente");
+
+                    b.Navigation("UserFuncionario");
+                });
+
             modelBuilder.Entity("ProjetoPCRH.Models.Cliente", b =>
                 {
                     b.Navigation("Contratos");
+                });
+
+            modelBuilder.Entity("ProjetoPCRH.Models.Contrato", b =>
+                {
+                    b.Navigation("Faturacoes");
                 });
 #pragma warning restore 612, 618
         }
