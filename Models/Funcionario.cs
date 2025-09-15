@@ -28,7 +28,9 @@ namespace ProjetoPCRH.Models
         [DisplayName("Data de Admissão")]
         [Column(TypeName = "date")]  // para guardar so a data sem horas
         public DateTime DataAdmissao { get; set; }
-   
+
+       
+
 
         public bool Ativo { get; set; }  //O EF vai mapear para bit no SQL Server (que armazena 0 ou 1).
 

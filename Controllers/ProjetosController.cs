@@ -9,8 +9,12 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
+    
     public class ProjetosController : Controller
     {
+        public ICollection<Funcionario> Funcionarios { get; set; }
+
+
         private readonly AppDbContext _context;
 
         public ProjetosController(AppDbContext context)
@@ -25,6 +29,25 @@ namespace ProjetoPCRH.Controllers
             var appDbContext = _context.Projetos.Include(p => p.Cliente);
             return View(await appDbContext.ToListAsync());
         }
+
+        // NOVO MÉTODO: MeusProjetos
+        [AuthorizeRole("Funcionario")]
+        public async Task<IActionResult> MeusProjetos()
+        {
+            var username = HttpContext.Session.GetString("Utilizadores");
+            if (string.IsNullOrEmpty(username))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var projetos = await _context.Projetos
+                .Include(p => p.Funcionarios)
+                .Where(p => p.Funcionarios.Any(f => f.NomeFuncionario == username))
+                .ToListAsync();
+
+            return View(projetos);
+        }
+
 
         // GET: Projetos/Details/5
         [AuthorizeRole("Administrador", "GestorProjeto")]

@@ -153,5 +153,25 @@ namespace ProjetoPCRH.Controllers
         {
             return _context.Funcionarios.Any(e => e.FuncionarioId == id);
         }
+
+
+        [AuthorizeRole("Funcionario")]
+        public async Task<IActionResult> MeusProjetos()
+        {
+            // Username do funcionário autenticado
+            var username = User.Identity.Name;
+
+            // Buscar projetos que tenham esse funcionário
+            var meusProjetos = await _context.Projetos
+                .Include(p => p.Cliente)
+                .Include(p => p.Funcionarios)
+                .Where(p => p.Funcionarios.Any(f => f.NomeFuncionario == username))
+                .ToListAsync();
+
+            return View(meusProjetos);
+        }
+
+
+
     }
 }
