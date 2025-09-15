@@ -36,11 +36,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Tipo)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UtilizadorId">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.UtilizadorId">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.UtilizadorId">Eliminar</a>
-            </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UtilizadorId" class="btn btn-primary">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.UtilizadorId" class="btn btn-secondary">Detalhes</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UtilizadorId" class="btn btn-danger">Eliminar</a>
+                </td>
         </tr>
 }
     </tbody>
