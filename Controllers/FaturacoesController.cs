@@ -9,7 +9,7 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
-    [AuthorizeRole("Admin")]
+    [AuthorizeRole("Administrador")]
 
     public class FaturacoesController : Controller
     {
