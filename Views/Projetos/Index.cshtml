@@ -13,63 +13,44 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NomeProjeto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataInicio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataFim)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Orcamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StatusProjeto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cliente)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.NomeProjeto)</th>
+            <th>@Html.DisplayNameFor(model => model.Descricao)</th>
+            <th>@Html.DisplayNameFor(model => model.DataInicio)</th>
+            <th>@Html.DisplayNameFor(model => model.DataFim)</th>
+            <th>@Html.DisplayNameFor(model => model.Orcamento)</th>
+            <th>@Html.DisplayNameFor(model => model.StatusProjeto)</th>
+            <th>@Html.DisplayNameFor(model => model.Cliente)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomeProjeto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataInicio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataFim)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Orcamento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusProjeto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cliente.NomeCliente)
-            </td>
-                
-                <td class="d-flex gap-2">
-                    <a asp-action="Edit" asp-route-id="@item.ProjetoId" class="btn btn-primary">Editar</a>|
-                    <a asp-action="Details" asp-route-id="@item.ProjetoId" class="btn btn-secondary">Detalhes</a>|
-                    <a asp-action="Delete" asp-route-id="@item.ProjetoId" class="btn btn-danger">Eliminar</a>|
-                    <a asp-action="Terminar" asp-route-id="@item.ProjetoId" class="btn btn-warning">Terminar</a>
-                </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.NomeProjeto)</td>
+                <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataInicio)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataFim)</td>
+                <td>@Html.DisplayFor(modelItem => item.Orcamento)</td>
+                <td>@Html.DisplayFor(modelItem => item.StatusProjeto)</td>
+                <td>@Html.DisplayFor(modelItem => item.Cliente.NomeCliente)</td>
 
-        </tr>
-}
+                <td class="d-flex gap-2">
+                    <a asp-action="Edit" asp-route-id="@item.ProjetoId" class="btn btn-primary">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProjetoId" class="btn btn-secondary">Detalhes</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProjetoId" class="btn btn-danger">Eliminar</a> |
+
+                    <!-- Botão Terminar como POST -->
+                    <form asp-action="Terminar" asp-controller="Projetos" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.ProjetoId" />
+                        <button type="submit" class="btn btn-warning"
+                                onclick="return confirm('Tens a certeza que queres terminar este projeto?');">
+                            Terminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

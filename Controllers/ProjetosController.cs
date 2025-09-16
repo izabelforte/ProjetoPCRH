@@ -155,6 +155,44 @@ namespace ProjetoPCRH.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: Projetos/Terminar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeRole("Administrador", "GestorProjeto")]
+        public async Task<IActionResult> Terminar(int id)
+        {
+            var projeto = await _context.Projetos.FindAsync(id);
+            if (projeto == null)
+            {
+                return NotFound();
+            }
+
+            // Atualizar status do projeto
+            projeto.StatusProjeto = "Terminado";
+            _context.Update(projeto);
+            await _context.SaveChangesAsync();
+
+            // Calcular tempo total em horas (DataFim não é nullable)
+            int horas = (int)(projeto.DataFim - projeto.DataInicio).TotalHours;
+
+            // Criar relatório associado ao projeto
+            var relatorio = new Relatorio
+            {
+                DataRelatorio = DateTime.Now,
+                Valor = projeto.Orcamento,
+                TempoTotalHoras = horas,
+                ProjetoId = projeto.ProjetoId
+            };
+
+            _context.Relatorios.Add(relatorio);
+            await _context.SaveChangesAsync();
+
+            // Redirecionar para a view RelatorioProjetoTerminado
+            // Certifica-te que a view espera um único Relatorio
+            return RedirectToAction("RelatorioProjetoTerminado", "Relatorios", new { id = relatorio.RelatorioId });
+        }
+
+
         private bool ProjetoExists(int id)
         {
             return _context.Projetos.Any(e => e.ProjetoId == id);
