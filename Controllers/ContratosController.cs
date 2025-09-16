@@ -9,7 +9,7 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
-    [AuthorizeRole("Admin", "GestorProjeto")]
+    [AuthorizeRole("Administrador", "GestorProjeto")]
 
     public class ContratosController : Controller
     {

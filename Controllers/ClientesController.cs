@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
-
-    [AuthorizeRole("Admin")]
+    [AuthorizeRole("Administrador")]
     public class ClientesController : Controller
     {
-
         private readonly AppDbContext _context;
 
         public ClientesController(AppDbContext context)
@@ -21,141 +17,135 @@ namespace ProjetoPCRH.Controllers
             _context = context;
         }
 
-        // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clientes.ToListAsync());
+            var clientes = await _context.Clientes
+                .FromSqlRaw("EXEC sp_ListarClientes")
+                .ToListAsync();
+            return View(clientes);
         }
 
-        // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var cliente = await _context.Clientes
-                .Include(c => c.Contratos)
-                    .ThenInclude(ct => ct.Faturacoes)
-            .FirstOrDefaultAsync(m => m.ClienteId == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+            var cliente = (await _context.Clientes
+                .FromSqlRaw("EXEC sp_ObterClientePorId @p0", id)
+                .ToListAsync())
+                .FirstOrDefault();
 
+            if (cliente == null) return NotFound();
             return View(cliente);
         }
 
-        // GET: Clientes/Create
+        // GET: Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clientes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClienteId,NomeCliente,Nif,Morada,Email")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("NomeCliente,Nif,Morada,Email")] Cliente cliente)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(cliente);
-                await _context.SaveChangesAsync();
+                foreach (var item in ModelState)
+                    foreach (var error in item.Value.Errors)
+                        Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
+                return View(cliente);
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC sp_InserirCliente @p0, @p1, @p2, @p3",
+                    cliente.NomeCliente, cliente.Nif, cliente.Morada ?? "", cliente.Email);
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Erro ao criar cliente: " + ex.Message);
+                return View(cliente);
+            }
         }
 
-        // GET: Clientes/Edit/5
+        // GET: Edit
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+            var cliente = (await _context.Clientes
+                .FromSqlRaw("EXEC sp_ObterClientePorId @p0", id)
+                .ToListAsync())
+                .FirstOrDefault();
+
+            if (cliente == null) return NotFound();
             return View(cliente);
         }
 
-        // POST: Clientes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ClienteId,NomeCliente,Nif,Morada,Email")] Cliente cliente)
         {
-            if (id != cliente.ClienteId)
+            if (id != cliente.ClienteId) return NotFound();
+
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                foreach (var item in ModelState)
+                    foreach (var error in item.Value.Errors)
+                        Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
+                return View(cliente);
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.ClienteId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC sp_AtualizarCliente @p0, @p1, @p2, @p3, @p4",
+                    cliente.ClienteId, cliente.NomeCliente, cliente.Nif, cliente.Morada ?? "", cliente.Email);
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Erro ao atualizar cliente: " + ex.Message);
+                return View(cliente);
+            }
         }
 
-        // GET: Clientes/Delete/5
+        // GET: Delete
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.ClienteId == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+            var cliente = (await _context.Clientes
+                .FromSqlRaw("EXEC sp_ObterClientePorId @p0", id)
+                .ToListAsync())
+                .FirstOrDefault();
 
+            if (cliente == null) return NotFound();
             return View(cliente);
         }
 
-        // POST: Clientes/Delete/5
+        // POST: DeleteConfirmed
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente != null)
+            try
             {
-                _context.Clientes.Remove(cliente);
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC sp_EliminarCliente @p0", id);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Erro ao eliminar cliente: " + ex.Message);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ClienteExists(int id)
-        {
-            return _context.Clientes.Any(e => e.ClienteId == id);
         }
     }
 }

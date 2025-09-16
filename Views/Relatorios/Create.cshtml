@@ -32,15 +32,14 @@
                 <select asp-for="ProjetoId" class ="form-control" asp-items="ViewBag.ProjetoId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Criar" class="btn btn-success" />
+                <br />
+                <a asp-action="Create" class="btn btn-success">Criar</a> | 
+                <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
