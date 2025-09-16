@@ -15,11 +15,11 @@ namespace ProjetoPCRH.Models
         public string Password { get; set; }
         [Required]
         public string Tipo { get; set; }
-
+        [ValidateNever]
         public int? FuncionarioId { get; set; }
         [ValidateNever]
         public virtual Funcionario Funcionario { get; set; }
-
+        [ValidateNever]
         public int? ClienteId { get; set; }
         [ValidateNever]
         public virtual Cliente Cliente { get; set; }

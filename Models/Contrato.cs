@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ProjetoPCRH.Models
 {
@@ -26,13 +27,18 @@ namespace ProjetoPCRH.Models
         
 
         [ForeignKey("ClienteId")]
+        [ValidateNever]
         public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; } = null!;
+        [ValidateNever]
+        public Cliente Cliente { get; set; } 
 
 
         [ForeignKey("ProjetoId")]
+        [ValidateNever]
         public int ProjetoId { get; set; }
+        [ValidateNever]
         public Projeto Projeto { get; set; }
+        [ValidateNever]
         public virtual ICollection<Faturacao> Faturacoes { get; set; }
         
     }
