@@ -17,6 +17,23 @@ namespace ProjetoPCRH.Controllers
         {
             _context = context;
         }
+        // GET: /Relatorios/RelatorioProjetoTerminado/5
+        public async Task<IActionResult> RelatorioProjetoTerminado(int id)
+        {
+            var relatorio = await _context.Relatorios
+                .Include(r => r.Projeto) // para aceder aos dados do projeto
+                .FirstOrDefaultAsync(r => r.RelatorioId == id);
+
+            if (relatorio == null)
+            {
+                return NotFound();
+            }
+
+            // Passa um único Relatorio para a view
+            return View(relatorio);
+        }
+
+        
 
         // GET: Relatorios
         [AuthorizeRole("Administrador", "GestorProjeto")]
