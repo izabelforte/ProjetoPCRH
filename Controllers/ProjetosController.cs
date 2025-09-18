@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjetoPCRH.Models;
+using ProjetoPCRH.Models.ViewModels;
 
 namespace ProjetoPCRH.Controllers
 {
@@ -69,24 +70,78 @@ namespace ProjetoPCRH.Controllers
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
+           
+            // Funcionários (todos)
+            ViewBag.Funcionarios = new SelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario");
+
+            ViewBag.StatusProjeto = new SelectList(new List<string> { "Planeado", "Em andamento" });
             return View();
         }
+
+        //// POST: Projetos/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[AuthorizeRole("Administrador", "GestorProjeto")]
+        //public async Task<IActionResult> Create([Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(projeto);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
+        //    return View(projeto);
+        //}
 
         // POST: Projetos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeRole("Administrador", "GestorProjeto")]
-        public async Task<IActionResult> Create([Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
+        public async Task<IActionResult> Create(ProjetoCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(projeto);
-                await _context.SaveChangesAsync();
+                // 1️⃣ Criar projeto
+                var projeto = new Projeto
+                {
+                    NomeProjeto = model.NomeProjeto,
+                    Descricao = model.Descricao,
+                    DataInicio = model.DataInicio,
+                    DataFim = model.DataFim,
+                    Orcamento = model.Orcamento,
+                    StatusProjeto = model.StatusProjeto,
+                    ClienteId = model.ClienteId
+                };
+
+                _context.Projetos.Add(projeto);
+                await _context.SaveChangesAsync(); // Salvar primeiro para gerar ProjetoId
+
+                // 2️⃣ Associar funcionários na tabela de junção
+                if (model.FuncionariosSelecionados != null)
+                {
+                    foreach (var funcId in model.FuncionariosSelecionados)
+                    {
+                        var relacao = new FuncionarioProjeto
+                        {
+                            ProjetoId = projeto.ProjetoId, // agora já existe
+                            FuncionarioId = funcId
+                        };
+                        _context.FuncionarioProjetos.Add(relacao);
+                    }
+
+                    await _context.SaveChangesAsync(); // Salvar as relações
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
-            return View(projeto);
+
+            // Se deu erro de validação, recarregar selects
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", model.ClienteId);
+            ViewBag.Funcionarios = new SelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario");
+            return View(model);
         }
+
+
 
         // GET: Projetos/Edit/5
         [AuthorizeRole("Administrador", "GestorProjeto")]

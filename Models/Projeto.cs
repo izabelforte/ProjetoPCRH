@@ -28,6 +28,7 @@ namespace ProjetoPCRH.Models
         [DisplayName("Orçamento")]
         public double Orcamento { get; set; }
         [DisplayName("Estado do Projeto")]
+        [ValidateNever]
         public string StatusProjeto { get; set; }
        
 
@@ -38,5 +39,7 @@ namespace ProjetoPCRH.Models
         public Cliente Cliente { get; set; }
         [ValidateNever]
         public ICollection<Funcionario> Funcionarios { get; set; }
+        [ValidateNever]
+        public ICollection<FuncionarioProjeto> FuncionarioProjetos { get; set; }
     }
 }

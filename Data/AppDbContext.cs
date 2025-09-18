@@ -13,6 +13,7 @@ namespace ProjetoPCRH.Models
 
         public DbSet<Relatorio> Relatorios { get; set; }
         public DbSet<Utilizador> Utilizadores { get; set; }
+        public DbSet<FuncionarioProjeto> FuncionarioProjetos { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -33,6 +34,21 @@ namespace ProjetoPCRH.Models
              .WithMany()
              .HasForeignKey(c => c.ProjetoId)
              .OnDelete(DeleteBehavior.Restrict);
+
+          
+
+            modelBuilder.Entity<FuncionarioProjeto>()
+                .HasKey(fp => new { fp.FuncionarioId, fp.ProjetoId });
+
+            modelBuilder.Entity<FuncionarioProjeto>()
+                .HasOne(fp => fp.Funcionario)
+                .WithMany(f => f.FuncionarioProjetos)
+                .HasForeignKey(fp => fp.FuncionarioId);
+
+            modelBuilder.Entity<FuncionarioProjeto>()
+                .HasOne(fp => fp.Projeto)
+                .WithMany(p => p.FuncionarioProjetos)
+                .HasForeignKey(fp => fp.ProjetoId);
         }
     
 }

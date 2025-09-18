@@ -1,4 +1,4 @@
-﻿@model ProjetoPCRH.Models.Projeto
+﻿@model ProjetoPCRH.Models.ViewModels.ProjetoCreateViewModel
 
 @{
     ViewData["Title"] = "Criar Projeto";
@@ -36,14 +36,28 @@
                 <label asp-for="Orcamento" class="control-label"></label>
                 <input asp-for="Orcamento" class="form-control" />
                 <span asp-validation-for="Orcamento" class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="StatusProjeto" class="control-label"></label>
+                    <select asp-for="StatusProjeto" class="form-control" asp-items="ViewBag.StatusProjeto"></select>
+                    <span asp-validation-for="StatusProjeto" class="text-danger"></span>
+                </div>
+
             </div>
             <div class="form-group">
                 <label asp-for="ClienteId" class="control-label"></label>
                 <select asp-for="ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
             </div>
+
+            <!-- Funcionários -->
             <div class="form-group">
-                <br /> 
-                <a asp-action="Create" class="btn btn-success">Criar</a> |
+                <label>Funcionários</label>
+                <select asp-for="FuncionariosSelecionados" asp-items="ViewBag.Funcionarios" class="form-control" multiple></select>
+                <small class="form-text text-muted">Segure Ctrl ou Cmd para selecionar múltiplos.</small>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Criar" class="btn btn-success" />
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>
         </form>
@@ -53,5 +67,44 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const select = document.getElementById("funcionarios");
+        const lista = document.getElementById("listaSelecionados");
+        const hiddenInputs = document.getElementById("hiddenInputs");
+        const btnAdd = document.getElementById("addFuncionario");
+
+        btnAdd.addEventListener("click", () => {
+            const selectedOption = select.options[select.selectedIndex];
+            if (!selectedOption) return;
+
+            const id = selectedOption.value;
+            const nome = selectedOption.text;
+
+            // Criar item da lista
+            const li = document.createElement("li");
+            li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+            li.innerHTML = `
+                ${nome}
+                <button type="button" class="btn btn-danger btn-sm">Remover</button>
+            `;
+
+            // Criar hidden input
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "FuncionariosSelecionados";
+            input.value = id;
+            li.appendChild(input);
+
+            // Evento remover
+            li.querySelector("button").addEventListener("click", () => {
+                select.add(new Option(nome, id)); // volta ao select
+                li.remove();
+            });
+
+            lista.appendChild(li);
+
+            // Retirar do select
+            select.remove(select.selectedIndex);
+        });
+    </script>
 }

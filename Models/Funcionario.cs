@@ -33,9 +33,11 @@ namespace ProjetoPCRH.Models
        
 
 
-        public bool Ativo { get; set; }  //O EF vai mapear para bit no SQL Server (que armazena 0 ou 1).
+        public bool Ativo { get; set; } 
         [ValidateNever]
         public ICollection<Projeto> Projetos { get; set; }
+        [ValidateNever]
+        public ICollection<FuncionarioProjeto> FuncionarioProjetos { get; set; }
     }
 
 }
