@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace ProjetoPCRH.Models
 {
@@ -33,7 +34,7 @@ namespace ProjetoPCRH.Models
 
 
         public bool Ativo { get; set; }  //O EF vai mapear para bit no SQL Server (que armazena 0 ou 1).
-
+        [ValidateNever]
         public ICollection<Projeto> Projetos { get; set; }
     }
 

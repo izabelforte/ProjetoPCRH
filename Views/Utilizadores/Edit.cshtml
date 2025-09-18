@@ -28,7 +28,33 @@
                 <label asp-for="Utilizador.Tipo" class="control-label"></label>
                 <input asp-for="Utilizador.Tipo" class="form-control" />
                 <span asp-validation-for="Utilizador.Tipo" class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="Utilizador.Tipo" class="control-label"></label>
+                    <select asp-for="Utilizador.Tipo" class="form-control" id="tipoSelect">
+                        <option value="">-- Selecione --</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Funcionario">Funcionario</option>
+                        <option value="Cliente">Cliente</option>
+                    </select>
+                    <span asp-validation-for="Utilizador.Tipo" class="text-danger"></span>
+                </div>
+
+            <div class="form-group" id="funcionarioDiv" style="display:none;">
+                <label asp-for="Utilizador.FuncionarioId" class="control-label"></label>
+                    <select asp-for="Utilizador.FuncionarioId" class="form-control" asp-items="@(new SelectList(Model.Funcionarios, "FuncionarioId", "NomeFuncionario"))"></select>
+                <span asp-validation-for="Utilizador.FuncionarioId" class="text-danger"></span>
             </div>
+
+            <div class="form-group" id="clienteDiv" style="display:none;">
+                <label asp-for="Utilizador.ClienteId" class="control-label"></label>
+                <select asp-for="Utilizador.ClienteId" class="form-control" asp-items="@(new SelectList(Model.Clientes, "ClienteId", "NomeCliente"))"></select>
+                <span asp-validation-for="Utilizador.ClienteId" class="text-danger"></span>
+            </div>
+
+
+
+
             <div class="form-group">
                 <br />
                 <input type="submit" value="Editar" class="btn btn-success" /> |
@@ -41,5 +67,20 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function toggleFields() {
+            var tipo = document.getElementById("tipoSelect").value;
+            document.getElementById("funcionarioDiv").style.display = (tipo === "Funcionario") ? "block" : "none";
+            document.getElementById("clienteDiv").style.display = (tipo === "Cliente") ? "block" : "none";
+        }
+
+        document.getElementById("tipoSelect").addEventListener("change", toggleFields);
+
+        // Inicializa a exibição correta ao carregar a página
+        toggleFields();
+    </script>
 }
