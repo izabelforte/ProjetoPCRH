@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreGeneratedDocument;
+using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +21,7 @@ namespace ProjetoPCRH.Controllers
             _context = context;
         }
         // GET: /Relatorios/RelatorioProjetoTerminado/5
-   
+
         public async Task<IActionResult> TerminarProjeto(int id)
         {
             var projeto = await _context.Projetos.FirstOrDefaultAsync(p => p.ProjetoId == id);
@@ -28,7 +30,7 @@ namespace ProjetoPCRH.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Projeto =   projeto;
+            ViewBag.Projeto = projeto;
             // Passa um único Relatorio para a view
             return View();
         }
@@ -36,7 +38,7 @@ namespace ProjetoPCRH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RelatorioId, DataRelatorio, Valor, TempoTotalHoras, ProjetoId")] Relatorio relatorio)
         {
-           
+
             if (ModelState.IsValid)
             {
                 _context.Add(relatorio);
@@ -53,6 +55,29 @@ namespace ProjetoPCRH.Controllers
             var appDbContext = _context.Relatorios.Include(r => r.Projeto);
             return View(await appDbContext.ToListAsync());
         }
-        
+        [AuthorizeRole("Cliente")]
+        public async Task<IActionResult> MeusRelatorios()
+        {
+            var utilizador = HttpContext.Session.GetString("UtilizadorId");
+            var utilizadorId = Convert.ToInt32(utilizador);
+            
+
+            if (string.IsNullOrEmpty(utilizador))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var cliente = _context.Utilizadores
+                .Where(u => u.UtilizadorId == utilizadorId).Single();
+            var clienteId = Convert.ToInt32(cliente.ClienteId);
+                
+             
+            var relatorios = await _context.Relatorios
+                .Include(r => r.Projeto.Cliente)
+                .Where(r => r.Projeto.Cliente.ClienteId == clienteId)
+                .ToListAsync();
+            return View(relatorios);
+        }
+
     }
 }
