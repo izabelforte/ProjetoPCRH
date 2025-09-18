@@ -4,6 +4,7 @@
     ViewData["Title"] = "Relatorios";
 }
 
+
 <h1>Lista de Relatórios</h1>
 
 <br />
@@ -14,40 +15,65 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DataRelatorio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Valor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TempoTotalHoras)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Projeto)
+            </th>
+            <th>
+                Horas Previstas
+            </th>
+            <th>
+                Horas Gastas
+            </th>
+            <th>
+                Valor Orçamentado
+            </th>
+            <th>
+                Gastos Reais
+            </th>
+            <th>
+                Desempenho da equipa
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+            
+                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / item.Projeto.Orcamento;
+                var Percent = Math.Abs(DesempenhoEquipa);
+                var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalDays;
+                var HorasGastas = (@item.Projeto.DataFim - @item.DataRelatorio).TotalDays;
+
+               
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataRelatorio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Valor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TempoTotalHoras)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Projeto.NomeProjeto)
             </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.RelatorioId" class="btn btn-primary">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@item.RelatorioId" class="btn btn-secondary">Detalhes</a> |
-                    <a asp-action="Delete" asp-route-id="@item.RelatorioId" class="btn btn-danger">Eliminar</a>
-                </td>
+            <td>
+                @HorasPrevistas
+            </td>
+            <td>
+                @HorasGastas
+            </td>
+            <td>
+                @item.Projeto.Orcamento
+            </td>
+            <td>
+                @item.TempoTotalHoras
+            </td>
+            <td>
+                @if(item.TempoTotalHoras > item.Projeto.Orcamento)
+                {
+
+                        <p class="text-danger">@Percent.ToString("F2") %</p>
+                        /// Exibir uma delas a verde a outra a vermelho
+                }
+                else
+                {
+                        <p class="text-success">@Percent.ToString("F2") %</p>
+                }
+    
+            </td>
+                
         </tr>
 }
     </tbody>

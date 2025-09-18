@@ -51,5 +51,5 @@ namespace ProjetoPCRH.Models
                 .HasForeignKey(fp => fp.ProjetoId);
         }
     
-}
+    }
 }

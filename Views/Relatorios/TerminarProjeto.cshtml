@@ -1,17 +1,18 @@
 ﻿@model ProjetoPCRH.Models.Relatorio
 
 @{
-    ViewData["Title"] = "Criar Relatório";
+    ViewData["Title"] = "Terminar Projeto";
+    var projeto = ViewBag.Projeto as ProjetoPCRH.Models.Projeto;
 }
 
-<h1>Criar Relatório</h1>
+<h2>Terminar Projeto</h2>
 
-
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProjetoId" 
+                value="@projeto.ProjetoId"/>
             <div class="form-group">
                 <label asp-for="DataRelatorio" class="control-label"></label>
                 <input asp-for="DataRelatorio" class="form-control" />
@@ -28,19 +29,12 @@
                 <span asp-validation-for="TempoTotalHoras" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProjetoId" class="control-label"></label>
-                <select asp-for="ProjetoId" class ="form-control" asp-items="ViewBag.ProjetoId"></select>
-            </div>
-            <div class="form-group">
-                <br />
-                <a asp-action="Create" class="btn btn-success">Criar</a> | 
+                <input type="submit" value="Validar" class="btn btn-success" /> |
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>
         </form>
     </div>
 </div>
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<p>
+    <a asp-controller="Projetos" asp-action="Index" class="btn btn-secondary">Voltar à lista de projetos</a>
+</p>
