@@ -35,5 +35,5 @@ namespace ProjetoPCRH.Models
              .OnDelete(DeleteBehavior.Restrict);
         }
     
-}
+    }
 }

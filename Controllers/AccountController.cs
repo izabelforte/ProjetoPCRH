@@ -36,7 +36,7 @@ namespace ProjetoPCRH.Controllers
             ViewBag.Erro = "Utilizador ou password incorretos!";
             return View();
         }
-
+         
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

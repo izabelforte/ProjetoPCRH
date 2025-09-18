@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,22 +19,32 @@ namespace ProjetoPCRH.Controllers
             _context = context;
         }
         // GET: /Relatorios/RelatorioProjetoTerminado/5
-        public async Task<IActionResult> RelatorioProjetoTerminado(int id)
+   
+        public async Task<IActionResult> TerminarProjeto(int id)
         {
-            var relatorio = await _context.Relatorios
-                .Include(r => r.Projeto) // para aceder aos dados do projeto
-                .FirstOrDefaultAsync(r => r.RelatorioId == id);
+            var projeto = await _context.Projetos.FirstOrDefaultAsync(p => p.ProjetoId == id);
 
-            if (relatorio == null)
+            if (projeto == null)
             {
                 return NotFound();
             }
-
+            ViewBag.Projeto =   projeto;
             // Passa um único Relatorio para a view
-            return View(relatorio);
+            return View();
         }
-
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("RelatorioId, DataRelatorio, Valor, TempoTotalHoras, ProjetoId")] Relatorio relatorio)
+        {
+           
+            if (ModelState.IsValid)
+            {
+                _context.Add(relatorio);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction("Index", "Relatorios");
+        }
 
         // GET: Relatorios
         [AuthorizeRole("Administrador", "GestorProjeto")]
@@ -42,6 +53,6 @@ namespace ProjetoPCRH.Controllers
             var appDbContext = _context.Relatorios.Include(r => r.Projeto);
             return View(await appDbContext.ToListAsync());
         }
+        
     }
 }
-
