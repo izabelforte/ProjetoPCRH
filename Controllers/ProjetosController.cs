@@ -31,20 +31,33 @@ namespace ProjetoPCRH.Controllers
             return View(await appDbContext.ToListAsync());
         }
 
-        // NOVO MÉTODO: MeusProjetos
+        /// NOVO MÉTODO: MeusProjetos
         [AuthorizeRole("Funcionario")]
         public async Task<IActionResult> MeusProjetos()
         {
-            var username = HttpContext.Session.GetString("Utilizadores");
-            if (string.IsNullOrEmpty(username))
+            // 1. Pegar o ID do utilizador logado
+            var userId = HttpContext.Session.GetInt32("UtilizadorId");
+            if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            var projetos = await _context.Projetos
-                .Include(p => p.Funcionarios)
-                .Where(p => p.Funcionarios.Any(f => f.NomeFuncionario == username))
-                .ToListAsync();
+            // 2. Buscar o utilizador e verificar se tem FuncionarioId
+            var utilizador = await _context.Utilizadores
+                .Include(u => u.Funcionario)
+                    .ThenInclude(f => f.FuncionarioProjetos)
+                        .ThenInclude(fp => fp.Projeto)
+                .FirstOrDefaultAsync(u => u.UtilizadorId == userId);
+
+            if (utilizador?.Funcionario == null)
+            {
+                return NotFound("Este utilizador não está associado a nenhum funcionário.");
+            }
+
+            // 3. Pegar os projetos associados
+            var projetos = utilizador.Funcionario.FuncionarioProjetos
+                .Select(fp => fp.Projeto)
+                .ToList();
 
             return View(projetos);
         }
@@ -149,23 +162,74 @@ namespace ProjetoPCRH.Controllers
         {
             if (id == null) return NotFound();
 
-            var projeto = await _context.Projetos.FindAsync(id);
+            var projeto = await _context.Projetos
+                .Include(p => p.FuncionarioProjetos)
+                    .ThenInclude(fp => fp.Funcionario)
+                .FirstOrDefaultAsync(p => p.ProjetoId == id);
+
             if (projeto == null) return NotFound();
 
+            var vm = new ProjetoCreateViewModel
+            {
+                ProjetoId = projeto.ProjetoId,
+                NomeProjeto = projeto.NomeProjeto,
+                Descricao = projeto.Descricao,
+                DataInicio = projeto.DataInicio,
+                DataFim = projeto.DataFim,
+                Orcamento = projeto.Orcamento,
+                StatusProjeto = projeto.StatusProjeto,
+                ClienteId = projeto.ClienteId,
+                FuncionariosSelecionados = projeto.FuncionarioProjetos
+                                           ?.Select(fp => fp.FuncionarioId)
+                                           .ToList()
+            };
+
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
-            return View(projeto);
+            ViewBag.Funcionarios = new MultiSelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario", vm.FuncionariosSelecionados);
+
+            return View(vm);
         }
+
 
         // POST: Projetos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeRole("Administrador", "GestorProjeto")]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
+        public async Task<IActionResult> Edit(int id, ProjetoCreateViewModel model)
         {
-            if (id != projeto.ProjetoId) return NotFound();
+            if (id != model.ProjetoId) return NotFound();
 
             if (ModelState.IsValid)
             {
+                var projeto = await _context.Projetos
+                    .Include(p => p.FuncionarioProjetos)
+                    .FirstOrDefaultAsync(p => p.ProjetoId == id);
+
+                if (projeto == null) return NotFound();
+
+                // Atualizar dados principais
+                projeto.NomeProjeto = model.NomeProjeto;
+                projeto.Descricao = model.Descricao;
+                projeto.DataInicio = model.DataInicio;
+                projeto.DataFim = model.DataFim;
+                projeto.Orcamento = model.Orcamento;
+                projeto.StatusProjeto = model.StatusProjeto;
+                projeto.ClienteId = model.ClienteId;
+
+                // Atualizar relação Funcionários
+                projeto.FuncionarioProjetos.Clear(); // remove todos
+                if (model.FuncionariosSelecionados != null)
+                {
+                    foreach (var funcId in model.FuncionariosSelecionados)
+                    {
+                        projeto.FuncionarioProjetos.Add(new FuncionarioProjeto
+                        {
+                            ProjetoId = projeto.ProjetoId,
+                            FuncionarioId = funcId
+                        });
+                    }
+                }
+
                 try
                 {
                     _context.Update(projeto);
@@ -176,11 +240,17 @@ namespace ProjetoPCRH.Controllers
                     if (!ProjetoExists(projeto.ProjetoId)) return NotFound();
                     else throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
-            return View(projeto);
+
+            // Se deu erro de validação → recarregar selects
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", model.ClienteId);
+            ViewBag.Funcionarios = new MultiSelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario", model.FuncionariosSelecionados);
+
+            return View(model);
         }
+
 
         // GET: Projetos/Delete/5
         [AuthorizeRole("Administrador", "GestorProjeto")]

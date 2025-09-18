@@ -1,7 +1,10 @@
-﻿namespace ProjetoPCRH.Models.ViewModels
+﻿using System.Security.Policy;
+
+namespace ProjetoPCRH.Models.ViewModels
 {
     public class ProjetoCreateViewModel
     {
+        public int ProjetoId { get; set; }
         public string NomeProjeto { get; set; }
         public string Descricao { get; set; }
         public DateTime DataInicio { get; set; }
