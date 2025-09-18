@@ -35,16 +35,29 @@ namespace ProjetoPCRH.Controllers
         [AuthorizeRole("Funcionario")]
         public async Task<IActionResult> MeusProjetos()
         {
-            var username = HttpContext.Session.GetString("Utilizadores");
-            if (string.IsNullOrEmpty(username))
+            // 1. Pegar o ID do utilizador logado
+            var userId = HttpContext.Session.GetInt32("UtilizadorId");
+            if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            var projetos = await _context.Projetos
-                .Include(p => p.Funcionarios)
-                .Where(p => p.Funcionarios.Any(f => f.NomeFuncionario == username))
-                .ToListAsync();
+            // 2. Buscar o utilizador e verificar se tem FuncionarioId
+            var utilizador = await _context.Utilizadores
+                .Include(u => u.Funcionario)
+                    .ThenInclude(f => f.FuncionarioProjetos)
+                        .ThenInclude(fp => fp.Projeto)
+                .FirstOrDefaultAsync(u => u.UtilizadorId == userId);
+
+            if (utilizador?.Funcionario == null)
+            {
+                return NotFound("Este utilizador não está associado a nenhum funcionário.");
+            }
+
+            // 3. Pegar os projetos associados
+            var projetos = utilizador.Funcionario.FuncionarioProjetos
+                .Select(fp => fp.Projeto)
+                .ToList();
 
             return View(projetos);
         }
