@@ -84,8 +84,6 @@ namespace ProjetoPCRH.Controllers
         }
 
         // POST: Funcionarios/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FuncionarioId,NomeFuncionario,Nif,Cargo,Email,DataAdmissao,Ativo")] Funcionario funcionario)
@@ -97,6 +95,21 @@ namespace ProjetoPCRH.Controllers
 
             if (ModelState.IsValid)
             {
+                // 🔹 Verificação antes de salvar
+                if (!funcionario.Ativo)
+                {
+                    var temProjetos = await _context.FuncionarioProjetos
+                        .Include(fp => fp.Projeto)
+                        .AnyAsync(fp => fp.FuncionarioId == funcionario.FuncionarioId
+                                        && fp.Projeto.StatusProjeto == "Em andamento");
+
+                    if (temProjetos)
+                    {
+                        ModelState.AddModelError("", "Este funcionário está em projetos em andamento e não pode ser desativado.");
+                        return View(funcionario);
+                    }
+                }
+
                 try
                 {
                     _context.Update(funcionario);
@@ -118,37 +131,15 @@ namespace ProjetoPCRH.Controllers
             return View(funcionario);
         }
 
-        // GET: Funcionarios/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+
+        [HttpGet]
+        public async Task<IActionResult> VerificarProjetosEmAndamento(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var temProjetos = await _context.FuncionarioProjetos
+                .Include(fp => fp.Projeto)
+                .AnyAsync(fp => fp.FuncionarioId == id && fp.Projeto.StatusProjeto == "Em Andamento");
 
-            var funcionario = await _context.Funcionarios
-                .FirstOrDefaultAsync(m => m.FuncionarioId == id);
-            if (funcionario == null)
-            {
-                return NotFound();
-            }
-
-            return View(funcionario);
-        }
-
-        // POST: Funcionarios/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var funcionario = await _context.Funcionarios.FindAsync(id);
-            if (funcionario != null)
-            {
-                _context.Funcionarios.Remove(funcionario);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { temProjetos });
         }
 
         private bool FuncionarioExists(int id)
