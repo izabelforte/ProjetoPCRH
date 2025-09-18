@@ -7,7 +7,7 @@
 <h1>Detalhes</h1>
 
 <div>
-    <h4>Funcionario</h4>
+    <h4>Funcionário</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -47,6 +47,45 @@
             @Html.DisplayFor(model => model.Ativo)
         </dd>
     </dl>
+    <h4>Projetos do Funcionário</h4>
+
+    @if (Model.FuncionarioProjetos != null && Model.FuncionarioProjetos.Any())
+    {
+        <table class="table table-striped table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Id Projeto</th>
+                    <th>Nome do Projeto</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var fp in Model.FuncionarioProjetos)
+                {
+                    <tr>
+                        <td>@fp.Projeto.ProjetoId</td>
+                        <td>@fp.Projeto.NomeProjeto</td>
+                        <td>@fp.Projeto.StatusProjeto</td>
+                        <td>
+                            <a asp-controller="Projetos"
+                               asp-action="Details"
+                               asp-route-id="@fp.Projeto.ProjetoId"
+                               class="btn btn-sm btn-primary">
+                                Ver Detalhes
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p><em>Este funcionário ainda não está associado a nenhum projeto.</em></p>
+    }
+
+
 </div>
 <div>
     <a asp-action="Edit" class="btn btn-success" asp-route-id="@Model?.FuncionarioId">Editar</a> |

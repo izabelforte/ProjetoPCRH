@@ -34,6 +34,8 @@ namespace ProjetoPCRH.Controllers
             }
 
             var funcionario = await _context.Funcionarios
+                .Include(f => f.FuncionarioProjetos)
+                    .ThenInclude(fp => fp.Projeto)
                 .FirstOrDefaultAsync(m => m.FuncionarioId == id);
             if (funcionario == null)
             {
