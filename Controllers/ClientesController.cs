@@ -30,14 +30,23 @@ namespace ProjetoPCRH.Controllers
         {
             if (id == null) return NotFound();
 
+            // Buscar cliente pela SP
             var cliente = (await _context.Clientes
                 .FromSqlRaw("EXEC sp_ObterClientePorId @p0", id)
                 .ToListAsync())
                 .FirstOrDefault();
 
             if (cliente == null) return NotFound();
+
+            // Carregar contratos e faturações normalmente
+            cliente.Contratos = await _context.Contratos
+                .Where(c => c.ClienteId == cliente.ClienteId)
+                .Include(c => c.Faturacoes)
+                .ToListAsync();
+
             return View(cliente);
         }
+
 
         // GET: Create
         public IActionResult Create()

@@ -67,16 +67,22 @@ namespace ProjetoPCRH.Controllers
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
             var projeto = await _context.Projetos
                 .Include(p => p.Cliente)
+                .Include(p => p.FuncionarioProjetos)       // tabela de junção
+                    .ThenInclude(fp => fp.Funcionario)    // funcionário dentro da junção
                 .FirstOrDefaultAsync(m => m.ProjetoId == id);
 
-            if (projeto == null) return NotFound();
+            if (projeto == null)
+                return NotFound();
 
             return View(projeto);
         }
+
+
 
         // GET: Projetos/Create
         [AuthorizeRole("Administrador", "GestorProjeto")]

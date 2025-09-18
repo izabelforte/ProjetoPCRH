@@ -13,6 +13,7 @@ namespace ProjetoPCRH.Models.ViewModels
         public string StatusProjeto { get; set; }
         public int ClienteId { get; set; }
 
+
         // IDs dos funcionários escolhidos
         public List<int> FuncionariosSelecionados { get; set; } = new List<int>();
     }
