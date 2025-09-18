@@ -29,6 +29,7 @@ namespace ProjetoPCRH.Controllers
                 // Guardar na sessão com os nomes corretos
                 HttpContext.Session.SetInt32("UtilizadorId", utilizador.UtilizadorId);
                 HttpContext.Session.SetString("Utilizadores", utilizador.Username);
+                HttpContext.Session.SetString("UtilizadorId", utilizador.UtilizadorId.ToString());
                 HttpContext.Session.SetString("TipoUtilizadores", utilizador.Tipo); // Administrador, GestorProjeto, Funcionario, Cliente
 
 
