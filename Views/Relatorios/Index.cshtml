@@ -40,7 +40,7 @@
                 var DesempenhoEquipa = (item.TempoTotalHoras * 100) / item.Projeto.Orcamento;
                 var Percent = Math.Abs(DesempenhoEquipa);
                 var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalDays;
-                var HorasGastas = (@item.Projeto.DataFim - @item.DataRelatorio).TotalDays;
+                var HorasGastas = (@item.DataRelatorio - @item.Projeto.DataInicio).TotalDays;
 
                
         <tr>
