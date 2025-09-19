@@ -24,8 +24,7 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalDays;
-                var HorasGastas = (@item.DataRelatorio - @item.Projeto.DataInicio).TotalDays;
+                var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalHours;
                 var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
                 var Percent = Math.Abs(DesempenhoEquipa);
             <tr>
@@ -36,7 +35,7 @@ else
                         @HorasPrevistas
                     </td>
                     <td>
-                        @HorasGastas
+                        @item.TempoTotalHoras
                     </td>
                     <td>
                         @item.Projeto.Orcamento
