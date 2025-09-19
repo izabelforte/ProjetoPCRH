@@ -11,6 +11,8 @@
     <a asp-action="Create" class="btn btn-success">Criar</a>
 </p>
 <table class="table">
+    @*Imprime o cabecalho da tabela*@
+    <thead>
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.NomeProjeto)</th>
@@ -25,7 +27,7 @@
     </thead>
     <tbody>
         @foreach (var item in Model)
-        {
+        { @*Imprime os dados da tabela*@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.NomeProjeto)</td>
                 <td>@Html.DisplayFor(modelItem => item.Descricao)</td>
@@ -38,8 +40,8 @@
                 <td class="d-flex gap-2">
                     <a asp-action="Edit" asp-route-id="@item.ProjetoId" class="btn btn-primary">Editar</a> |
                     <a asp-action="Details" asp-route-id="@item.ProjetoId" class="btn btn-secondary">Detalhes</a> |
-                    
-                    <!-- Botão Terminar como POST -->
+
+                    @*Botões*@
                     <form asp-action="Terminar" asp-controller="Projetos" method="post" style="display:inline;">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@item.ProjetoId" />

@@ -4,12 +4,13 @@
     ViewData["Title"] = "Detalhes";
 }
 
-<h1>Detalhes</h1>
+<h1>Detalhes</h1> @*Título da página*@
 
 <div>
     <h4>Contrato</h4>
     <hr />
     <dl class="row">
+        @*Imprime o cabeçalho da tabela*@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DataInicio)
         </dt>
@@ -49,6 +50,7 @@
     </dl>
 </div>
 <div>
+    @*Botões*@
     <a asp-action="Edit" class="btn btn-success" asp-route-id="@Model?.ContratoId">Editar</a> |
     <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
 </div>

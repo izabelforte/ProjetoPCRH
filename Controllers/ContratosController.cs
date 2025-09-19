@@ -10,24 +10,34 @@ using ProjetoPCRH.Models;
 namespace ProjetoPCRH.Controllers
 {
     [AuthorizeRole("Administrador", "GestorProjeto")]
-
     public class ContratosController : Controller
     {
         private readonly AppDbContext _context;
 
+        /// <summary>
+        /// Inicializa o controller de contratos com o contexto da base de dados.
+        /// </summary>
+        /// <param name="context">Instância do contexto da aplicação.</param>
         public ContratosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Contratoes
+        /// <summary>
+        /// Lista todos os contratos existentes, incluindo cliente e projeto associados.
+        /// </summary>
+        /// <returns>View com a lista de contratos.</returns>
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Contratos.Include(c => c.Cliente).Include(c => c.Projeto);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Contratoes/Details/5
+        /// <summary>
+        /// Mostra os detalhes de um contrato específico.
+        /// </summary>
+        /// <param name="id">Identificador do contrato.</param>
+        /// <returns>View com os detalhes do contrato ou NotFound se não existir.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,7 +57,10 @@ namespace ProjetoPCRH.Controllers
             return View(contrato);
         }
 
-        // GET: Contratoes/Create
+        /// <summary>
+        /// Exibe o formulário para criar um novo contrato.
+        /// </summary>
+        /// <returns>View para criação de contrato.</returns>
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
@@ -55,9 +68,11 @@ namespace ProjetoPCRH.Controllers
             return View();
         }
 
-        // POST: Contratoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Cria um novo contrato e guarda-o na base de dados.
+        /// </summary>
+        /// <param name="contrato">Objeto contrato com os dados preenchidos.</param>
+        /// <returns>Redireciona para Index se for bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ContratoId,DataInicio,DataFim,Valor,StatusContrato,ClienteId,ProjetoId")] Contrato contrato)
@@ -73,7 +88,11 @@ namespace ProjetoPCRH.Controllers
             return View(contrato);
         }
 
-        // GET: Contratoes/Edit/5
+        /// <summary>
+        /// Exibe o formulário de edição para um contrato específico.
+        /// </summary>
+        /// <param name="id">Identificador do contrato.</param>
+        /// <returns>View para edição do contrato ou NotFound se não existir.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,9 +110,12 @@ namespace ProjetoPCRH.Controllers
             return View(contrato);
         }
 
-        // POST: Contratoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Atualiza os dados de um contrato existente.
+        /// </summary>
+        /// <param name="id">Identificador do contrato.</param>
+        /// <param name="contrato">Objeto contrato atualizado.</param>
+        /// <returns>Redireciona para Index se for bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ContratoId,DataInicio,DataFim,Valor,StatusContrato,ClienteId,ProjetoId")] Contrato contrato)
@@ -128,7 +150,11 @@ namespace ProjetoPCRH.Controllers
             return View(contrato);
         }
 
-        // GET: Contratoes/Delete/5
+        /// <summary>
+        /// Exibe a página de confirmação para exclusão de um contrato.
+        /// </summary>
+        /// <param name="id">Identificador do contrato.</param>
+        /// <returns>View de confirmação de exclusão ou NotFound se não existir.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,7 +174,11 @@ namespace ProjetoPCRH.Controllers
             return View(contrato);
         }
 
-        // POST: Contratoes/Delete/5
+        /// <summary>
+        /// Confirma e executa a exclusão de um contrato.
+        /// </summary>
+        /// <param name="id">Identificador do contrato.</param>
+        /// <returns>Redireciona para Index após exclusão.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -163,6 +193,11 @@ namespace ProjetoPCRH.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Verifica se um contrato existe na base de dados.
+        /// </summary>
+        /// <param name="id">Identificador do contrato.</param>
+        /// <returns>True se o contrato existir, False caso contrário.</returns>
         private bool ContratoExists(int id)
         {
             return _context.Contratos.Any(e => e.ContratoId == id);

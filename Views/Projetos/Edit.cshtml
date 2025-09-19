@@ -15,32 +15,32 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProjetoId" />
-            <div class="form-group">
+            <div class="form-group"> @*Nome do Projeto*@
                 <label asp-for="NomeProjeto" class="control-label"></label>
                 <input asp-for="NomeProjeto" class="form-control" />
                 <span asp-validation-for="NomeProjeto" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group"> @*Descricao*@
                 <label asp-for="Descricao" class="control-label"></label>
                 <input asp-for="Descricao" class="form-control" />
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group"> @*Data de Inicio*@
                 <label asp-for="DataInicio" class="control-label"></label>
                 <input asp-for="DataInicio" class="form-control" />
                 <span asp-validation-for="DataInicio" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group"> @*Data de Fim*@
                 <label asp-for="DataFim" class="control-label"></label>
                 <input asp-for="DataFim" class="form-control" />
                 <span asp-validation-for="DataFim" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group">@*Orçamento*@
                 <label asp-for="Orcamento" class="control-label"></label>
                 <input asp-for="Orcamento" class="form-control" />
                 <span asp-validation-for="Orcamento" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group">@*Estado do Projeto*@
                 <label asp-for="StatusProjeto" class="control-label"></label>
                 <select asp-for="StatusProjeto" class="form-control">
                     <option value="Em andamento">Em andamento</option>
@@ -50,13 +50,13 @@
                 <span asp-validation-for="StatusProjeto" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group"> @*CLiente ID*@
                 <label asp-for="ClienteId" class="control-label"></label>
                 <select asp-for="ClienteId" class="form-control" asp-items="ViewBag.ClienteId"></select>
                 <span asp-validation-for="ClienteId" class="text-danger"></span>
             </div>
 
-            <!-- Funcionários -->
+            @*Funcionários *@
             <div class="form-group">
                 <label>Funcionários</label>
                 <select asp-for="FuncionariosSelecionados" asp-items="ViewBag.Funcionarios" class="form-control" multiple></select>
@@ -65,7 +65,7 @@
 
 
             <div class="form-group">
-                <br />
+                <br />@*Botões *@
                 <input type="submit" value="Editar" class="btn btn-success" /> |
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>

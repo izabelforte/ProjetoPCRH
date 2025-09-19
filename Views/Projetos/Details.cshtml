@@ -4,12 +4,13 @@
     ViewData["Title"] = "Detalhes";
 }
 
-<h1>Detalhes</h1>
+<h1>Detalhes</h1> @*Título da página*@
 
 <div>
     <h4>Projeto</h4>
     <hr />
     <dl class="row">
+        @*Imprime o cabeçalho da tabela*@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NomeProjeto)
         </dt>
@@ -50,10 +51,10 @@
             Funcionários
         </dt>
         <dd class="col-sm-10">
-            @if (Model.FuncionarioProjetos != null && Model.FuncionarioProjetos.Any())
+            @if (Model.FuncionarioProjetos != null && Model.FuncionarioProjetos.Any()) @*verifica se há dados*@
             {
                 <ul>
-                    @foreach (var fp in Model.FuncionarioProjetos)
+                    @foreach (var fp in Model.FuncionarioProjetos) @*imprime os dados*@
                     {
                         <li>@fp.Funcionario.NomeFuncionario (@fp.Funcionario.Email)</li>
                     }
@@ -75,5 +76,6 @@
     </dl>
 </div>
 <div>
+    @*Botões*@
     <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
 </div>

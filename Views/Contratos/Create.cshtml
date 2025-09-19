@@ -11,23 +11,28 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
+            @* Validação do ModelState *@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                @*Data de Início*@
                 <label asp-for="DataInicio" class="control-label"></label>
                 <input asp-for="DataInicio" class="form-control" />
                 <span asp-validation-for="DataInicio" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*Data de Fim*@
                 <label asp-for="DataFim" class="control-label"></label>
                 <input asp-for="DataFim" class="form-control" />
                 <span asp-validation-for="DataFim" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*Valor*@
                 <label asp-for="Valor" class="control-label"></label>
                 <input asp-for="Valor" class="form-control" />
                 <span asp-validation-for="Valor" class="text-danger"></span>
             </div>
             <div class="form-group">
+                ´@*Estado do Contrato*@
                 <label asp-for="StatusContrato" class="control-label"></label>
                 <select asp-for="StatusContrato" class="form-control">
                     <option value="Ativo">Ativo</option>
@@ -38,15 +43,18 @@
             </div>
 
             <div class="form-group">
+                @*ClienteID*@
                 <label asp-for="ClienteId" class="control-label"></label>
                 <select asp-for="ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
             </div>
             <div class="form-group">
+                @*ProjetoID*@
                 <label asp-for="ProjetoId" class="control-label"></label>
                 <select asp-for="ProjetoId" class ="form-control" asp-items="ViewBag.ProjetoId"></select>
             </div>
             <div class="form-group">
                 <br />
+                @*Botões*@
                 <button type="submit" class="btn btn-success">Criar</button>|
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>

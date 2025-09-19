@@ -2,18 +2,18 @@
 
 @{
     ViewData["Title"] = "Meus Projetos";
-}
+}@*Página de Projetos do Funcionário*@
 
 <h2>Meus Projetos</h2>
 
-@if (!Model.Any())
+@if (!Model.Any()) @*Verifica se tem projetos*@
 {
-    <p>Não tens projetos atribuídos neste momento.</p>
+    <p>Não tens projetos atribuídos neste momento.</p> 
 }
 else
 {
     <table class="table table-striped">
-        <thead>
+        <thead> @*Cabeçalho*@
             <tr>
                 <th>Nome</th>
                 <th>Descrição</th>
@@ -23,7 +23,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var projeto in Model)
+            @foreach (var projeto in Model) @*Imprime os dados*@
             {
                 <tr>
                     <td>@projeto.NomeProjeto</td>

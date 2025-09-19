@@ -9,23 +9,38 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
+    /// <summary>
+    /// Controller responsável pela gestão de funcionários.
+    /// Apenas utilizadores com o papel de Administrador podem aceder.
+    /// </summary>
     [AuthorizeRole("Administrador")]
     public class FuncionariosController : Controller
     {
         private readonly AppDbContext _context;
 
+        /// <summary>
+        /// Inicializa o controller de funcionários com o contexto da base de dados.
+        /// </summary>
+        /// <param name="context">Instância do contexto da aplicação.</param>
         public FuncionariosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Funcionarios
+        /// <summary>
+        /// Lista todos os funcionários existentes.
+        /// </summary>
+        /// <returns>View com a lista de funcionários.</returns>
         public async Task<IActionResult> Index()
         {
             return View(await _context.Funcionarios.ToListAsync());
         }
 
-        // GET: Funcionarios/Details/5
+        /// <summary>
+        /// Mostra os detalhes de um funcionário específico, incluindo os projetos associados.
+        /// </summary>
+        /// <param name="id">Identificador do funcionário.</param>
+        /// <returns>View com os detalhes do funcionário ou NotFound se não existir.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,15 +60,20 @@ namespace ProjetoPCRH.Controllers
             return View(funcionario);
         }
 
-        // GET: Funcionarios/Create
+        /// <summary>
+        /// Exibe o formulário para criar um novo funcionário.
+        /// </summary>
+        /// <returns>View para criação de funcionário.</returns>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Funcionarios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Cria um novo funcionário e guarda-o na base de dados.
+        /// </summary>
+        /// <param name="funcionario">Objeto funcionário com os dados preenchidos.</param>
+        /// <returns>Redireciona para Index se for bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FuncionarioId,NomeFuncionario,Nif,Cargo,Email,DataAdmissao,Ativo")] Funcionario funcionario)
@@ -67,7 +87,11 @@ namespace ProjetoPCRH.Controllers
             return View(funcionario);
         }
 
-        // GET: Funcionarios/Edit/5
+        /// <summary>
+        /// Exibe o formulário de edição para um funcionário específico.
+        /// </summary>
+        /// <param name="id">Identificador do funcionário.</param>
+        /// <returns>View para edição do funcionário ou NotFound se não existir.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,7 +107,12 @@ namespace ProjetoPCRH.Controllers
             return View(funcionario);
         }
 
-        // POST: Funcionarios/Edit/5
+        /// <summary>
+        /// Atualiza os dados de um funcionário existente.
+        /// </summary>
+        /// <param name="id">Identificador do funcionário.</param>
+        /// <param name="funcionario">Objeto funcionário atualizado.</param>
+        /// <returns>Redireciona para Index se for bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FuncionarioId,NomeFuncionario,Nif,Cargo,Email,DataAdmissao,Ativo")] Funcionario funcionario)
@@ -131,7 +160,11 @@ namespace ProjetoPCRH.Controllers
             return View(funcionario);
         }
 
-
+        /// <summary>
+        /// Verifica se o funcionário possui projetos em andamento.
+        /// </summary>
+        /// <param name="id">Identificador do funcionário.</param>
+        /// <returns>JSON indicando se o funcionário possui projetos em andamento.</returns>
         [HttpGet]
         public async Task<IActionResult> VerificarProjetosEmAndamento(int id)
         {
@@ -142,12 +175,21 @@ namespace ProjetoPCRH.Controllers
             return Json(new { temProjetos });
         }
 
+        /// <summary>
+        /// Verifica se um funcionário existe na base de dados.
+        /// </summary>
+        /// <param name="id">Identificador do funcionário.</param>
+        /// <returns>True se existir, False caso contrário.</returns>
         private bool FuncionarioExists(int id)
         {
             return _context.Funcionarios.Any(e => e.FuncionarioId == id);
         }
 
-
+        /// <summary>
+        /// Exibe os projetos associados ao funcionário autenticado.
+        /// Apenas disponível para utilizadores com papel de Funcionário.
+        /// </summary>
+        /// <returns>View com os projetos do funcionário autenticado.</returns>
         [AuthorizeRole("Funcionario")]
         public async Task<IActionResult> MeusProjetos()
         {
@@ -163,8 +205,6 @@ namespace ProjetoPCRH.Controllers
 
             return View(meusProjetos);
         }
-
-
-
     }
 }
+

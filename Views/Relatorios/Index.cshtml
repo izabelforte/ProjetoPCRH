@@ -10,6 +10,7 @@
 <br />
 
 <table class="table">
+    @*Imprime o cabecalho da tabela*@
     <thead>
         <tr>
             <th>
@@ -33,16 +34,18 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model) { @*Imprime os dados da tabela*@
             
-               
+               @*Cálculos auxiliare*@
                 var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalHours;
                 var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
                 var Percent = Math.Abs(DesempenhoEquipa);
+                
 
                
         <tr>
             <td>
+                    
                 @Html.DisplayFor(modelItem => item.Projeto.NomeProjeto)
             </td>
             <td>
