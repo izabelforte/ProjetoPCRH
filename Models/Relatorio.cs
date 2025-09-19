@@ -13,10 +13,14 @@ namespace ProjetoPCRH.Models
         public int RelatorioId { get; set; }
 
         [Column(TypeName = "date")]  // para guardar so a data sem horas
+
+        [DisplayName("Data de relatório")]
         public DateTime DataRelatorio { get; set; }
 
+        [DisplayName("Gastos reais")]
         public double Valor { get; set; }
         
+        [DisplayName("Horas gastas")]
         public int TempoTotalHoras { get; set; }
 
         public int ProjetoId { get; set; }
