@@ -4,12 +4,12 @@
     ViewData["Title"] = "Detalhes";
 }
 
-<h1>Detalhes</h1>
+<h1>Detalhes</h1> @*Título da página*@
 
 <div>
     <h4>Cliente</h4>
     <hr />
-    <dl class="row">
+    <dl class="row"> @*Imprime o cabeçalho da tabela*@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NomeCliente)
         </dt>
@@ -37,9 +37,9 @@
     </dl>
 </div>
 <h4>Contratos do Cliente</h4>
-@if (Model.Contratos != null && Model.Contratos.Any())
+@if (Model.Contratos != null && Model.Contratos.Any()) @*verifica se há dados*@
 {
-    @foreach (var contrato in Model.Contratos)
+    @foreach (var contrato in Model.Contratos) @*imprime os dados*@
     {
         
         
@@ -65,7 +65,7 @@
         </table>
 
         <h4>Faturações</h4>
-        @if (contrato.Faturacoes != null && contrato.Faturacoes.Any())
+        @if (contrato.Faturacoes != null && contrato.Faturacoes.Any()) @*Verifica se há faturação*@
         {
             <table class="table table-sm">
                 <thead>
@@ -76,7 +76,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var fatura in contrato.Faturacoes)
+                    @foreach (var fatura in contrato.Faturacoes) @*Imprime os dados da faturação*@
                     {
                         <tr>
                             <td>@fatura.FaturaId</td>
@@ -87,18 +87,18 @@
                 </tbody>
             </table>
         }
-        else
+        else @*Imprime no caso de não haver faturas*@
         {
             <p>Sem faturas para este contrato.</p>
         }
     }
 }
 
-else
+else @*Imprime no caso de não haver contratos*@
 {
     <p>Este cliente ainda não tem contratos.</p>
 }
-<div>
+<div> @*Botões*@
     <a asp-action="Edit" class="btn btn-success" asp-route-id="@Model?.ClienteId">Editar</a> |
     <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
 </div>

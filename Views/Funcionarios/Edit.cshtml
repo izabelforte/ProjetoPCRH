@@ -13,27 +13,27 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="FuncionarioId" />
-            <div class="form-group">
+            <div class="form-group">@*Funcionario ID*@
                 <label asp-for="NomeFuncionario" class="control-label"></label>
                 <input asp-for="NomeFuncionario" class="form-control" />
                 <span asp-validation-for="NomeFuncionario" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group">@*NIF*@
                 <label asp-for="Nif" class="control-label"></label>
                 <input asp-for="Nif" class="form-control" />
                 <span asp-validation-for="Nif" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group">@*Cargo*@
                 <label asp-for="Cargo" class="control-label"></label>
                 <input asp-for="Cargo" class="form-control" />
                 <span asp-validation-for="Cargo" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group"> @*Email*@
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group">@*Data de Admissão*@
                 <label asp-for="DataAdmissao" class="control-label"></label>
                 <input asp-for="DataAdmissao" class="form-control" />
                 <span asp-validation-for="DataAdmissao" class="text-danger"></span>
@@ -45,7 +45,7 @@
                 </label>
             </div>
             <div class="form-group">
-                <br />
+                <br /> @*Botões*@
                 <input type="submit" value="Editar" class="btn btn-success" /> |
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>

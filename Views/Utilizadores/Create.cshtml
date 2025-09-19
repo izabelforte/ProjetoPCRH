@@ -10,21 +10,24 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
+            @* Nome do Cliente *@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
                 <label asp-for="Utilizador.Username" class="control-label"></label>
                 <input asp-for="Utilizador.Username" class="form-control" />
                 <span asp-validation-for="Utilizador.Username" class="text-danger"></span>
+                @*Username*@
             </div>
 
             <div class="form-group">
                 <label asp-for="Utilizador.Password" class="control-label"></label>
                 <input asp-for="Utilizador.Password" class="form-control" />
                 <span asp-validation-for="Utilizador.Password" class="text-danger"></span>
+                @*Password*@
             </div>
 
-            <div class="form-group">
+            <div class="form-group"> @*Tipo*@
                 <label asp-for="Utilizador.Tipo" class="control-label"></label>
                 <select asp-for="Utilizador.Tipo" class="form-control" id="tipoSelect">
                     <option value="">-- Selecione --</option>
@@ -41,7 +44,7 @@
                 <label asp-for="Utilizador.FuncionarioId" class="control-label">Funcionário</label>
                 <select asp-for="Utilizador.FuncionarioId" class="form-control"
                         asp-items="@(new SelectList(Model.Funcionarios, "FuncionarioId", "NomeFuncionario"))">
-                    <option value="">-- Selecione o Funcionário --</option>
+                    <option value="">-- Selecione o Funcionário --</option> @*Seleção de Funcionário*@
                 </select>
                 <span asp-validation-for="Utilizador.FuncionarioId" class="text-danger"></span>
             </div>
@@ -50,12 +53,12 @@
                 <label asp-for="Utilizador.ClienteId" class="control-label">Cliente</label>
                 <select asp-for="Utilizador.ClienteId" class="form-control"
                         asp-items="@(new SelectList(Model.Clientes, "ClienteId", "NomeCliente"))">
-                    <option value="">-- Selecione o Cliente --</option>
+                    <option value="">-- Selecione o Cliente --</option> @*Seleção do Cliente*@
                 </select>
                 <span asp-validation-for="Utilizador.ClienteId" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group"> @*Botões*@
                 <br />
                 <input type="submit" value="Criar" class="btn btn-success" /> |
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>

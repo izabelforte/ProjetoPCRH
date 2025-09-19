@@ -11,6 +11,7 @@
     <a asp-action="Create" class="btn btn-success">Criar</a>
 </p>
 <table class="table">
+    @*Imprime o cabecalho da tabela*@
     <thead>
         <tr>
             <th>
@@ -26,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model) { @*Imprime os dados da tabela*@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DataFatura)
@@ -38,6 +39,7 @@
                 @Html.DisplayFor(modelItem => item.Contrato.ContratoId)
             </td>
                 <td>
+                    @*Botões*@
                     <a asp-action="Edit" asp-route-id="@item.FaturaId" class="btn btn-primary">Editar</a> |
                     <a asp-action="Details" asp-route-id="@item.FaturaId" class="btn btn-secondary">Detalhes</a> |
                     <a asp-action="Delete" asp-route-id="@item.FaturaId" class="btn btn-danger">Eliminar</a>

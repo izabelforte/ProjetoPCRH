@@ -11,6 +11,8 @@
     <a asp-action="Create" class="btn btn-success">Criar</a>
 </p>
 <table class="table">
+    @*Imprime o cabecalho da tabela*@
+    <thead>
     <thead>
         <tr>
             <th>
@@ -35,7 +37,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model) { @*Imprime os dados da tabela*@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.NomeFuncionario)

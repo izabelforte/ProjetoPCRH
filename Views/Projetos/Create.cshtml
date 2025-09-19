@@ -12,33 +12,40 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
+            @* Validação do ModelState *@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                @*Nome do Projeto*@
                 <label asp-for="NomeProjeto" class="control-label"></label>
                 <input asp-for="NomeProjeto" class="form-control" />
                 <span asp-validation-for="NomeProjeto" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*Descrição*@
                 <label asp-for="Descricao" class="control-label"></label>
                 <input asp-for="Descricao" class="form-control" />
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*Data de Inicio*@
                 <label asp-for="DataInicio" class="control-label"></label>
                 <input asp-for="DataInicio" class="form-control" />
                 <span asp-validation-for="DataInicio" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*Data Fim*@
                 <label asp-for="DataFim" class="control-label"></label>
                 <input asp-for="DataFim" class="form-control" />
                 <span asp-validation-for="DataFim" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @*Orcamento*@
                 <label asp-for="Orcamento" class="control-label"></label>
                 <input asp-for="Orcamento" class="form-control" />
                 <span asp-validation-for="Orcamento" class="text-danger"></span>
 
                 <div class="form-group">
+                    @*Estado do Projeto*@
                     <label asp-for="StatusProjeto" class="control-label"></label>
                     <select asp-for="StatusProjeto" class="form-control" asp-items="ViewBag.StatusProjeto"></select>
                     <span asp-validation-for="StatusProjeto" class="text-danger"></span>
@@ -46,17 +53,18 @@
 
             </div>
             <div class="form-group">
+                @*Cliente Id*@
                 <label asp-for="ClienteId" class="control-label"></label>
                 <select asp-for="ClienteId" class ="form-control" asp-items="ViewBag.ClienteId"></select>
             </div>
 
-            <!-- Funcionários -->
+            @*Funcionários - usa o script abaixo de .js*@
             <div class="form-group">
                 <label>Funcionários</label>
                 <select asp-for="FuncionariosSelecionados" asp-items="ViewBag.Funcionarios" class="form-control" multiple></select>
                 <small class="form-text text-muted">Segure Ctrl ou Cmd para selecionar múltiplos.</small>
             </div>
-
+            @*Botões*@
             <div class="form-group mt-3">
                 <input type="submit" value="Criar" class="btn btn-success" />
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
@@ -81,7 +89,7 @@
             const id = selectedOption.value;
             const nome = selectedOption.text;
 
-            // Criar item da lista
+            @*Criar item da lista*@
             const li = document.createElement("li");
             li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
             li.innerHTML = `
@@ -89,14 +97,14 @@
                 <button type="button" class="btn btn-danger btn-sm">Remover</button>
             `;
 
-            // Criar hidden input
+            @* Criar hidden *@
             const input = document.createElement("input");
             input.type = "hidden";
             input.name = "FuncionariosSelecionados";
             input.value = id;
             li.appendChild(input);
 
-            // Evento remover
+            @* Evento remover *@
             li.querySelector("button").addEventListener("click", () => {
                 select.add(new Option(nome, id)); // volta ao select
                 li.remove();
@@ -104,7 +112,7 @@
 
             lista.appendChild(li);
 
-            // Retirar do select
+            @* Retirar do select *@
             select.remove(select.selectedIndex);
         });
     </script>

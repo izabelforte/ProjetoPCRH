@@ -4,14 +4,14 @@
 }
 <h2>Meus Relatórios</h2>
 
-@if (!Model.Any())
+@if (!Model.Any()) @*Verifica se há relatórios*@
 {
     <p>Não tens relatórios disponíveis</p>
 }
 else
 {
     <table class="table table-striped">
-        <thead>
+        <thead> @*Cabeçalho da tabela*@
             <tr>
                 <th>Projeto</th>
                 <th>Horas Previstas</th>
@@ -23,7 +23,7 @@ else
         </thead>
         <tbody>
             @foreach (var item in Model)
-            {
+            {  @*Imprime os dados da tabela*@
                 var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalHours;
                 var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
                 var Percent = Math.Abs(DesempenhoEquipa);
@@ -44,7 +44,7 @@ else
                         @item.Valor
                     </td>
                     <td>
-                        @if (item.TempoTotalHoras > HorasPrevistas)
+                        @if (item.TempoTotalHoras > HorasPrevistas) @*Se o desempenho for positivo fica verde, se for negativo vermelho*@
                         {
 
                             <p class="text-danger">@Percent.ToString("F2") %</p>

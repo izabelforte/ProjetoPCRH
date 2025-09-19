@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create" class="btn btn-success">Criar</a>
 </p>
-<table class="table">
+<table class="table"> @*Imprime o cabecalho da tabela*@
     <thead>
         <tr>
             <th>
@@ -28,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model) { @*Imprime os dados da tabela*@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.NomeCliente)
@@ -42,7 +42,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-                <td>
+                <td> @*Botões*@
                     <a asp-action="Edit" asp-route-id="@item.ClienteId" class="btn btn-primary">Editar</a> |
                     <a asp-action="Details" asp-route-id="@item.ClienteId" class="btn btn-secondary">Detalhes</a> |
                     <a asp-action="Delete" asp-route-id="@item.ClienteId" class="btn btn-danger">Eliminar</a>
