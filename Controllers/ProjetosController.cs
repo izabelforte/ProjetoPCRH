@@ -10,20 +10,34 @@ using ProjetoPCRH.Models.ViewModels;
 
 namespace ProjetoPCRH.Controllers
 {
-    
+    /// <summary>
+    /// Controller responsável pela gestão de projetos.
+    /// Controla ações como listar, criar, editar, eliminar, consultar e terminar projetos.
+    /// O acesso é restrito a Administrador e GestorProjeto, exceto para o método MeusProjetos.
+    /// </summary>
     public class ProjetosController : Controller
     {
+        /// <summary>
+        /// Coleção de funcionários associada (utilizada em Views).
+        /// </summary>
         public ICollection<Funcionario> Funcionarios { get; set; }
-
 
         private readonly AppDbContext _context;
 
+        /// <summary>
+        /// Inicializa o controller de projetos com o contexto da base de dados.
+        /// </summary>
+        /// <param name="context">Instância do contexto da aplicação.</param>
         public ProjetosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Projetos
+        /// <summary>
+        /// Lista todos os projetos, incluindo informação do cliente.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <returns>View com a lista de projetos.</returns>
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Index()
         {
@@ -31,18 +45,20 @@ namespace ProjetoPCRH.Controllers
             return View(await appDbContext.ToListAsync());
         }
 
-        /// NOVO MÉTODO: MeusProjetos
+        /// <summary>
+        /// Lista os projetos associados ao funcionário autenticado.
+        /// Apenas acessível a utilizadores com papel de Funcionário.
+        /// </summary>
+        /// <returns>View com os projetos do funcionário autenticado ou redireciona para login se não houver sessão.</returns>
         [AuthorizeRole("Funcionario")]
         public async Task<IActionResult> MeusProjetos()
         {
-            // Pegar o ID do utilizador logado
             var userId = HttpContext.Session.GetInt32("UtilizadorId");
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // Buscar o utilizador e verificar se tem FuncionarioId
             var utilizador = await _context.Utilizadores
                 .Include(u => u.Funcionario)
                     .ThenInclude(f => f.FuncionarioProjetos)
@@ -54,7 +70,6 @@ namespace ProjetoPCRH.Controllers
                 return NotFound("Este utilizador não está associado a nenhum funcionário.");
             }
 
-            // Pegar os projetos associados
             var projetos = utilizador.Funcionario.FuncionarioProjetos
                 .Select(fp => fp.Projeto)
                 .ToList();
@@ -62,8 +77,13 @@ namespace ProjetoPCRH.Controllers
             return View(projetos);
         }
 
-
-        // GET: Projetos/Details/5
+        /// <summary>
+        /// Mostra os detalhes de um projeto específico.
+        /// Inclui informações do cliente e funcionários associados.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <param name="id">Identificador do projeto.</param>
+        /// <returns>View com detalhes do projeto ou NotFound se não existir.</returns>
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -72,8 +92,8 @@ namespace ProjetoPCRH.Controllers
 
             var projeto = await _context.Projetos
                 .Include(p => p.Cliente)
-                .Include(p => p.FuncionarioProjetos)       
-                    .ThenInclude(fp => fp.Funcionario)    
+                .Include(p => p.FuncionarioProjetos)
+                    .ThenInclude(fp => fp.Funcionario)
                 .FirstOrDefaultAsync(m => m.ProjetoId == id);
 
             if (projeto == null)
@@ -82,34 +102,32 @@ namespace ProjetoPCRH.Controllers
             return View(projeto);
         }
 
-
-
-        // GET: Projetos/Create
+        /// <summary>
+        /// Exibe o formulário para criar um novo projeto.
+        /// Inclui listas de clientes, funcionários ativos e status.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <returns>View para criação de projeto.</returns>
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
-
-            
-            ViewBag.Funcionarios = new SelectList(_context.Funcionarios.Where(f => f.Ativo), 
-                "FuncionarioId",
-                "NomeFuncionario"
-            );
-
+            ViewBag.Funcionarios = new SelectList(_context.Funcionarios.Where(f => f.Ativo), "FuncionarioId", "NomeFuncionario");
             ViewBag.StatusProjeto = new SelectList(new List<string> { "Planeado", "Em andamento" });
             return View();
         }
 
-      
-
-        // POST: Projetos/Create
+        /// <summary>
+        /// Cria um novo projeto e associa funcionários selecionados.
+        /// </summary>
+        /// <param name="model">ViewModel com dados do projeto e funcionários selecionados.</param>
+        /// <returns>Redireciona para Index se bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProjetoCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Criar projeto
                 var projeto = new Projeto
                 {
                     NomeProjeto = model.NomeProjeto,
@@ -122,22 +140,19 @@ namespace ProjetoPCRH.Controllers
                 };
 
                 _context.Projetos.Add(projeto);
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
 
-                // Associar funcionários na tabela de junção
                 if (model.FuncionariosSelecionados != null)
                 {
                     foreach (var funcId in model.FuncionariosSelecionados)
                     {
-                        var relacao = new FuncionarioProjeto
+                        _context.FuncionarioProjetos.Add(new FuncionarioProjeto
                         {
-                            ProjetoId = projeto.ProjetoId, 
+                            ProjetoId = projeto.ProjetoId,
                             FuncionarioId = funcId
-                        };
-                        _context.FuncionarioProjetos.Add(relacao);
+                        });
                     }
-
-                    await _context.SaveChangesAsync(); 
+                    await _context.SaveChangesAsync();
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -147,9 +162,12 @@ namespace ProjetoPCRH.Controllers
             return View(model);
         }
 
-
-
-        // GET: Projetos/Edit/5
+        /// <summary>
+        /// Exibe o formulário de edição de um projeto existente, incluindo funcionários associados.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <param name="id">Identificador do projeto.</param>
+        /// <returns>View para edição ou NotFound se não existir.</returns>
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -181,8 +199,13 @@ namespace ProjetoPCRH.Controllers
             return View(vm);
         }
 
-
-        // POST: Projetos/Edit/5
+        /// <summary>
+        /// Atualiza os dados de um projeto existente e suas associações de funcionários.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <param name="id">Identificador do projeto.</param>
+        /// <param name="model">ViewModel com dados atualizados do projeto.</param>
+        /// <returns>Redireciona para Index se bem-sucedido, ou retorna view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeRole("Administrador", "GestorProjeto")]
@@ -198,7 +221,6 @@ namespace ProjetoPCRH.Controllers
 
                 if (projeto == null) return NotFound();
 
-                
                 projeto.NomeProjeto = model.NomeProjeto;
                 projeto.Descricao = model.Descricao;
                 projeto.DataInicio = model.DataInicio;
@@ -207,8 +229,7 @@ namespace ProjetoPCRH.Controllers
                 projeto.StatusProjeto = model.StatusProjeto;
                 projeto.ClienteId = model.ClienteId;
 
-               
-                projeto.FuncionarioProjetos.Clear(); 
+                projeto.FuncionarioProjetos.Clear();
                 if (model.FuncionariosSelecionados != null)
                 {
                     foreach (var funcId in model.FuncionariosSelecionados)
@@ -241,8 +262,12 @@ namespace ProjetoPCRH.Controllers
             return View(model);
         }
 
-
-        // GET: Projetos/Delete/5
+        /// <summary>
+        /// Exibe a confirmação de exclusão de um projeto.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <param name="id">Identificador do projeto.</param>
+        /// <returns>View de confirmação ou NotFound se não existir.</returns>
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -257,7 +282,12 @@ namespace ProjetoPCRH.Controllers
             return View(projeto);
         }
 
-        // POST: Projetos/Delete/5
+        /// <summary>
+        /// Executa a exclusão de um projeto existente.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <param name="id">Identificador do projeto a ser removido.</param>
+        /// <returns>Redireciona para a lista de projetos após exclusão.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [AuthorizeRole("Administrador", "GestorProjeto")]
@@ -270,19 +300,20 @@ namespace ProjetoPCRH.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Projetos/Terminar/5
+        /// <summary>
+        /// Marca um projeto como terminado.
+        /// Apenas acessível por Administrador e Gestor de Projeto.
+        /// </summary>
+        /// <param name="id">Identificador do projeto a ser terminado.</param>
+        /// <returns>Redireciona para a página de relatório do projeto terminado.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeRole("Administrador", "GestorProjeto")]
         public async Task<IActionResult> Terminar(int id)
         {
             var projeto = await _context.Projetos.FindAsync(id);
-            if (projeto == null)
-            {
-                return NotFound();
-            }
+            if (projeto == null) return NotFound();
 
-            // Atualizar status do projeto
             projeto.StatusProjeto = "Terminado";
             _context.Update(projeto);
             await _context.SaveChangesAsync();
@@ -290,10 +321,15 @@ namespace ProjetoPCRH.Controllers
             return RedirectToAction("TerminarProjeto", "Relatorios", new { id = projeto.ProjetoId });
         }
 
-
+        /// <summary>
+        /// Verifica se um projeto existe na base de dados pelo seu identificador.
+        /// </summary>
+        /// <param name="id">Identificador do projeto.</param>
+        /// <returns>True se existir, False caso contrário.</returns>
         private bool ProjetoExists(int id)
         {
             return _context.Projetos.Any(e => e.ProjetoId == id);
         }
     }
 }
+

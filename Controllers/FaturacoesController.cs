@@ -9,25 +9,39 @@ using ProjetoPCRH.Models;
 
 namespace ProjetoPCRH.Controllers
 {
+    /// <summary>
+    /// Controller responsável pela gestão das faturas (Faturações).
+    /// Apenas utilizadores com o papel de Administrador podem aceder.
+    /// </summary>
     [AuthorizeRole("Administrador")]
-
     public class FaturacoesController : Controller
     {
         private readonly AppDbContext _context;
 
+        /// <summary>
+        /// Inicializa o controller de faturações com o contexto da base de dados.
+        /// </summary>
+        /// <param name="context">Instância do contexto da aplicação.</param>
         public FaturacoesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Faturacaos
+        /// <summary>
+        /// Lista todas as faturas, incluindo a informação do contrato associado.
+        /// </summary>
+        /// <returns>View com a lista de faturas.</returns>
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Faturas.Include(f => f.Contrato);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Faturacaos/Details/5
+        /// <summary>
+        /// Mostra os detalhes de uma fatura específica.
+        /// </summary>
+        /// <param name="id">Identificador da fatura.</param>
+        /// <returns>View com os detalhes da fatura ou NotFound se não existir.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,16 +60,21 @@ namespace ProjetoPCRH.Controllers
             return View(faturacao);
         }
 
-        // GET: Faturacaos/Create
+        /// <summary>
+        /// Exibe o formulário para criar uma nova fatura.
+        /// </summary>
+        /// <returns>View para criação de fatura.</returns>
         public IActionResult Create()
         {
             ViewData["ContratoId"] = new SelectList(_context.Contratos, "ContratoId", "ContratoId");
             return View();
         }
 
-        // POST: Faturacaos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Cria uma nova fatura e guarda-a na base de dados.
+        /// </summary>
+        /// <param name="faturacao">Objeto fatura com os dados preenchidos.</param>
+        /// <returns>Redireciona para Index se for bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FaturaId,DataFatura,Valor,ContratoId")] Faturacao faturacao)
@@ -70,7 +89,11 @@ namespace ProjetoPCRH.Controllers
             return View(faturacao);
         }
 
-        // GET: Faturacaos/Edit/5
+        /// <summary>
+        /// Exibe o formulário de edição para uma fatura específica.
+        /// </summary>
+        /// <param name="id">Identificador da fatura.</param>
+        /// <returns>View para edição da fatura ou NotFound se não existir.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,9 +110,12 @@ namespace ProjetoPCRH.Controllers
             return View(faturacao);
         }
 
-        // POST: Faturacaos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Atualiza os dados de uma fatura existente.
+        /// </summary>
+        /// <param name="id">Identificador da fatura.</param>
+        /// <param name="faturacao">Objeto fatura atualizado.</param>
+        /// <returns>Redireciona para Index se for bem-sucedido, caso contrário retorna a mesma view com erros.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FaturaId,DataFatura,Valor,ContratoId")] Faturacao faturacao)
@@ -123,7 +149,11 @@ namespace ProjetoPCRH.Controllers
             return View(faturacao);
         }
 
-        // GET: Faturacaos/Delete/5
+        /// <summary>
+        /// Exibe a página de confirmação para exclusão de uma fatura.
+        /// </summary>
+        /// <param name="id">Identificador da fatura.</param>
+        /// <returns>View de confirmação de exclusão ou NotFound se não existir.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,7 +172,11 @@ namespace ProjetoPCRH.Controllers
             return View(faturacao);
         }
 
-        // POST: Faturacaos/Delete/5
+        /// <summary>
+        /// Confirma e executa a exclusão de uma fatura.
+        /// </summary>
+        /// <param name="id">Identificador da fatura.</param>
+        /// <returns>Redireciona para Index após exclusão.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -157,9 +191,15 @@ namespace ProjetoPCRH.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Verifica se uma fatura existe na base de dados.
+        /// </summary>
+        /// <param name="id">Identificador da fatura.</param>
+        /// <returns>True se a fatura existir, False caso contrário.</returns>
         private bool FaturacaoExists(int id)
         {
             return _context.Faturas.Any(e => e.FaturaId == id);
         }
     }
 }
+
