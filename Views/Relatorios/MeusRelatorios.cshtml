@@ -25,7 +25,7 @@ else
             @foreach (var item in Model)
             {  @*Imprime os dados da tabela*@
                 var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalHours;
-                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
+                var DesempenhoEquipa = (HorasPrevistas* 100) / @item.TempoTotalHoras;
                 var Percent = Math.Abs(DesempenhoEquipa);
             <tr>
                     <td>

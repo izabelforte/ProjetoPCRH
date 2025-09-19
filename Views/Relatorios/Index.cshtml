@@ -38,11 +38,8 @@
             
                @*Cálculos auxiliare*@
                 var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalHours;
-                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
-                var Percent = Math.Abs(DesempenhoEquipa);
-                
-
-               
+                var DesempenhoEquipa = (HorasPrevistas * 100) / @item.TempoTotalHoras;
+                var Percent = Math.Abs(DesempenhoEquipa);                             
         <tr>
             <td>
                     
