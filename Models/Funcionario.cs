@@ -27,7 +27,7 @@ namespace ProjetoPCRH.Models
         public string Email { get; set; }
 
         [DisplayName("Data de Admissão")]
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [Column(TypeName = "date")]  
         public DateTime DataAdmissao { get; set; }
 
        

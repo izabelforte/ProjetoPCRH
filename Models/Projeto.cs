@@ -19,12 +19,12 @@ namespace ProjetoPCRH.Models
         public string Descricao { get; set; }
 
         [DisplayName("Data de Início")]
-        [Column(TypeName = "date")]  // para guardar só a data sem horas
+        [Column(TypeName = "date")]  
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataInicio { get; set; }
 
         [DisplayName("Data de Fim")]
-        [Column(TypeName = "date")]  // para guardar só a data sem horas
+        [Column(TypeName = "date")]  
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataFim { get; set; }
 

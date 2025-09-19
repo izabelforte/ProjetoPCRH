@@ -12,7 +12,7 @@ namespace ProjetoPCRH.Models
         public int FaturaId { get; set; }
       
         [DisplayName("Data da Fatura")]
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [Column(TypeName = "date")]  
         public DateTime DataFatura { get; set; }
 
         [DisplayName("Valor")]

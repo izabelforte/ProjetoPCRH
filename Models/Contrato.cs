@@ -12,11 +12,11 @@ namespace ProjetoPCRH.Models
         public int ContratoId { get; set; }
 
         [DisplayName("Data de Início")]
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [Column(TypeName = "date")] 
         public DateTime DataInicio { get; set; }
 
         [DisplayName("Data de Fim")]
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [Column(TypeName = "date")]  
         public DateTime DataFim { get; set; }
 
         [DisplayName("Valor")]
