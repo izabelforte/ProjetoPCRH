@@ -13,17 +13,17 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Utilizador.UtilizadorId" />
-            <div class="form-group">
+            <div class="form-group"> @*Id Utilizador*@
                 <input type="hidden" asp-for="Utilizador.UtilizadorId" />
                 <label asp-for="Utilizador.Username" class="control-label"></label>
                 <input asp-for="Utilizador.Username" class="form-control" />
                 <span asp-validation-for="Utilizador.Username" class="text-danger"></span>
-            </div>
+            </div> @*Username*@
             <div class="form-group">
                 <label asp-for="Utilizador.Password" class="control-label"></label>
                 <input asp-for="Utilizador.Password" class="form-control" />
                 <span asp-validation-for="Utilizador.Password" class="text-danger"></span>
-            </div>
+            </div> @*Password*@
             <div class="form-group">
                 <label asp-for="Utilizador.Tipo" class="control-label"></label>
                 <input asp-for="Utilizador.Tipo" class="form-control" />
@@ -38,25 +38,25 @@
                         <option value="Cliente">Cliente</option>
                     </select>
                     <span asp-validation-for="Utilizador.Tipo" class="text-danger"></span>
-                </div>
+                </div> @*Tipo de Utilizador*@
 
             <div class="form-group" id="funcionarioDiv" style="display:none;">
                 <label asp-for="Utilizador.FuncionarioId" class="control-label"></label>
                     <select asp-for="Utilizador.FuncionarioId" class="form-control" asp-items="@(new SelectList(Model.Funcionarios, "FuncionarioId", "NomeFuncionario"))"></select>
                 <span asp-validation-for="Utilizador.FuncionarioId" class="text-danger"></span>
-            </div>
+            </div> 
 
             <div class="form-group" id="clienteDiv" style="display:none;">
                 <label asp-for="Utilizador.ClienteId" class="control-label"></label>
                 <select asp-for="Utilizador.ClienteId" class="form-control" asp-items="@(new SelectList(Model.Clientes, "ClienteId", "NomeCliente"))"></select>
                 <span asp-validation-for="Utilizador.ClienteId" class="text-danger"></span>
-            </div>
+            </div> @*Id do Cliente*@
 
 
 
 
             <div class="form-group">
-                <br />
+                <br /> @*Botões*@
                 <input type="submit" value="Editar" class="btn btn-success" /> |
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>

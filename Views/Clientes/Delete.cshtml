@@ -10,7 +10,7 @@
 <div>
     <h4>Cliente</h4>
     <hr />
-    <dl class="row">
+    <dl class="row"> @*Aqui aparecem os dados para o utilizador ver antes de eliminar*@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NomeCliente)
         </dt>
@@ -37,7 +37,7 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-action="Delete"> @* Botões*@
         <input type="hidden" asp-for="ClienteId" />
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>

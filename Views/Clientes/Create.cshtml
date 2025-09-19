@@ -10,38 +10,38 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post">
-            <!-- Validação do ModelState -->
+            @* Validação do ModelState *@
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <!-- Nome do Cliente -->
+            @* Nome do Cliente *@
             <div class="form-group">
                 <label asp-for="NomeCliente" class="control-label"></label>
                 <input asp-for="NomeCliente" class="form-control" />
                 <span asp-validation-for="NomeCliente" class="text-danger"></span>
             </div>
 
-            <!-- NIF -->
+            @* NIF *@
             <div class="form-group">
                 <label asp-for="Nif" class="control-label"></label>
                 <input asp-for="Nif" class="form-control" />
                 <span asp-validation-for="Nif" class="text-danger"></span>
             </div>
 
-            <!-- Morada -->
+            @* Morada *@
             <div class="form-group">
                 <label asp-for="Morada" class="control-label"></label>
                 <input asp-for="Morada" class="form-control" />
                 <span asp-validation-for="Morada" class="text-danger"></span>
             </div>
 
-            <!-- Email -->
+           @*  Email *@
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            <!-- Botões -->
+            @* Botões *@
             <div class="form-group">
                 <br/>
                 <button type="submit" class="btn btn-success">Criar</button>

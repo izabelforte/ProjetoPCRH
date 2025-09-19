@@ -6,7 +6,7 @@
 
 <h1>Eliminar Utilizador</h1>
 
-<h3>Tem a certeza que deseja eliminar este utilizador?</h3>
+<h3>Tem a certeza que deseja eliminar este utilizador?</h3> @*Aqui aparecem os dados para o utilizador ver antes de eliminar*@
 <div>
     
     <hr />
@@ -32,6 +32,7 @@
     </dl>
     
     <form asp-action="Delete">
+        @*Botões*@
         <input type="hidden" asp-for="UtilizadorId" />
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
         <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
