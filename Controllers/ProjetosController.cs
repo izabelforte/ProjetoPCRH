@@ -35,14 +35,14 @@ namespace ProjetoPCRH.Controllers
         [AuthorizeRole("Funcionario")]
         public async Task<IActionResult> MeusProjetos()
         {
-            // 1. Pegar o ID do utilizador logado
+            // Pegar o ID do utilizador logado
             var userId = HttpContext.Session.GetInt32("UtilizadorId");
             if (userId == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            // 2. Buscar o utilizador e verificar se tem FuncionarioId
+            // Buscar o utilizador e verificar se tem FuncionarioId
             var utilizador = await _context.Utilizadores
                 .Include(u => u.Funcionario)
                     .ThenInclude(f => f.FuncionarioProjetos)
@@ -54,7 +54,7 @@ namespace ProjetoPCRH.Controllers
                 return NotFound("Este utilizador não está associado a nenhum funcionário.");
             }
 
-            // 3. Pegar os projetos associados
+            // Pegar os projetos associados
             var projetos = utilizador.Funcionario.FuncionarioProjetos
                 .Select(fp => fp.Projeto)
                 .ToList();
@@ -72,8 +72,8 @@ namespace ProjetoPCRH.Controllers
 
             var projeto = await _context.Projetos
                 .Include(p => p.Cliente)
-                .Include(p => p.FuncionarioProjetos)       // tabela de junção
-                    .ThenInclude(fp => fp.Funcionario)    // funcionário dentro da junção
+                .Include(p => p.FuncionarioProjetos)       
+                    .ThenInclude(fp => fp.Funcionario)    
                 .FirstOrDefaultAsync(m => m.ProjetoId == id);
 
             if (projeto == null)
@@ -90,8 +90,8 @@ namespace ProjetoPCRH.Controllers
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
 
-            // Funcionários (todos)
-            ViewBag.Funcionarios = new SelectList(_context.Funcionarios.Where(f => f.Ativo), // apenas true
+            
+            ViewBag.Funcionarios = new SelectList(_context.Funcionarios.Where(f => f.Ativo), 
                 "FuncionarioId",
                 "NomeFuncionario"
             );
@@ -109,7 +109,7 @@ namespace ProjetoPCRH.Controllers
         {
             if (ModelState.IsValid)
             {
-                // 1️⃣ Criar projeto
+                // Criar projeto
                 var projeto = new Projeto
                 {
                     NomeProjeto = model.NomeProjeto,
@@ -122,28 +122,26 @@ namespace ProjetoPCRH.Controllers
                 };
 
                 _context.Projetos.Add(projeto);
-                await _context.SaveChangesAsync(); // Salvar primeiro para gerar ProjetoId
+                await _context.SaveChangesAsync(); 
 
-                // 2️⃣ Associar funcionários na tabela de junção
+                // Associar funcionários na tabela de junção
                 if (model.FuncionariosSelecionados != null)
                 {
                     foreach (var funcId in model.FuncionariosSelecionados)
                     {
                         var relacao = new FuncionarioProjeto
                         {
-                            ProjetoId = projeto.ProjetoId, // agora já existe
+                            ProjetoId = projeto.ProjetoId, 
                             FuncionarioId = funcId
                         };
                         _context.FuncionarioProjetos.Add(relacao);
                     }
 
-                    await _context.SaveChangesAsync(); // Salvar as relações
+                    await _context.SaveChangesAsync(); 
                 }
 
                 return RedirectToAction(nameof(Index));
             }
-
-            // Se deu erro de validação, recarregar selects
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", model.ClienteId);
             ViewBag.Funcionarios = new SelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario");
             return View(model);
@@ -174,9 +172,7 @@ namespace ProjetoPCRH.Controllers
                 Orcamento = projeto.Orcamento,
                 StatusProjeto = projeto.StatusProjeto,
                 ClienteId = projeto.ClienteId,
-                FuncionariosSelecionados = projeto.FuncionarioProjetos
-                                           ?.Select(fp => fp.FuncionarioId)
-                                           .ToList()
+                FuncionariosSelecionados = projeto.FuncionarioProjetos?.Select(fp => fp.FuncionarioId).ToList()
             };
 
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
@@ -202,7 +198,7 @@ namespace ProjetoPCRH.Controllers
 
                 if (projeto == null) return NotFound();
 
-                // Atualizar dados principais
+                
                 projeto.NomeProjeto = model.NomeProjeto;
                 projeto.Descricao = model.Descricao;
                 projeto.DataInicio = model.DataInicio;
@@ -211,8 +207,8 @@ namespace ProjetoPCRH.Controllers
                 projeto.StatusProjeto = model.StatusProjeto;
                 projeto.ClienteId = model.ClienteId;
 
-                // Atualizar relação Funcionários
-                projeto.FuncionarioProjetos.Clear(); // remove todos
+               
+                projeto.FuncionarioProjetos.Clear(); 
                 if (model.FuncionariosSelecionados != null)
                 {
                     foreach (var funcId in model.FuncionariosSelecionados)
@@ -239,7 +235,6 @@ namespace ProjetoPCRH.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Se deu erro de validação → recarregar selects
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", model.ClienteId);
             ViewBag.Funcionarios = new MultiSelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario", model.FuncionariosSelecionados);
 
@@ -292,10 +287,6 @@ namespace ProjetoPCRH.Controllers
             _context.Update(projeto);
             await _context.SaveChangesAsync();
 
-           
-
-            // Redirecionar para a view RelatorioProjetoTerminado
-            // Certifica-te que a view espera um único Relatorio
             return RedirectToAction("TerminarProjeto", "Relatorios", new { id = projeto.ProjetoId });
         }
 

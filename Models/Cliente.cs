@@ -26,7 +26,7 @@ namespace ProjetoPCRH.Models
         [DisplayName("E-mail")]
         public string Email { get; set; }
 
-        // Torna a coleção de contratos opcional e inicializa vazia
+        
         public virtual ICollection<Contrato> Contratos { get; set; } = new List<Contrato>();
     }
 }

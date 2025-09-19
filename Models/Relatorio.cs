@@ -12,7 +12,7 @@ namespace ProjetoPCRH.Models
         [ValidateNever]
         public int RelatorioId { get; set; }
 
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [Column(TypeName = "date")]  
         public DateTime DataRelatorio { get; set; }
 
         public double Valor { get; set; }
