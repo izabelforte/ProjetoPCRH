@@ -24,18 +24,27 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / item.Projeto.Orcamento;
+                var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalHours;
+                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
                 var Percent = Math.Abs(DesempenhoEquipa);
-                var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalDays;
-                var HorasGastas = (@item.DataRelatorio - @item.Projeto.DataInicio).TotalDays;
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Projeto.NomeProjeto)</td>
-                <td>@HorasPrevistas</td>
-                <td>@HorasGastas</td>
-                <td>@item.Projeto.Orcamento</td>
-                <td>@item.TempoTotalHoras</td>
-                <td>
-                        @if (item.TempoTotalHoras > item.Projeto.Orcamento)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Projeto.NomeProjeto)
+                    </td>
+                    <td>
+                        @HorasPrevistas
+                    </td>
+                    <td>
+                        @item.TempoTotalHoras
+                    </td>
+                    <td>
+                        @item.Projeto.Orcamento
+                    </td>
+                    <td>
+                        @item.Valor
+                    </td>
+                    <td>
+                        @if (item.TempoTotalHoras > HorasPrevistas)
                         {
 
                             <p class="text-danger">@Percent.ToString("F2") %</p>
@@ -45,7 +54,8 @@ else
                         {
                             <p class="text-success">@Percent.ToString("F2") %</p>
                         }
-                </td>
+
+                    </td>
             </tr>
 
             }

@@ -8,7 +8,7 @@
 <h2>Terminar Projeto</h2>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProjetoId" 
@@ -29,12 +29,13 @@
                 <span asp-validation-for="TempoTotalHoras" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <br />
                 <input type="submit" value="Validar" class="btn btn-success" /> |
-                <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
+                <a asp-action="Index" class="btn btn-primary">Voltar à lista de relatórios</a> |
+				<a asp-controller="Projetos" asp-action="Index" class="btn btn-secondary">Voltar à lista de projetos</a>
+
             </div>
         </form>
     </div>
 </div>
-<p>
-    <a asp-controller="Projetos" asp-action="Index" class="btn btn-secondary">Voltar à lista de projetos</a>
-</p>
+
