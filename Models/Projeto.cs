@@ -10,7 +10,7 @@ namespace ProjetoPCRH.Models
     {
         [Key]
         public int ProjetoId { get; set; }
-        
+
         [Required]
         [DisplayName("Nome do Projeto")]
         public string NomeProjeto { get; set; }
@@ -19,26 +19,32 @@ namespace ProjetoPCRH.Models
         public string Descricao { get; set; }
 
         [DisplayName("Data de Início")]
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [Column(TypeName = "date")]  // para guardar só a data sem horas
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataInicio { get; set; }
 
-        [Column(TypeName = "date")]  // para guardar so a data sem horas
+        [DisplayName("Data de Fim")]
+        [Column(TypeName = "date")]  // para guardar só a data sem horas
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DataFim { get; set; }
 
         [DisplayName("Orçamento")]
         public double Orcamento { get; set; }
+
         [DisplayName("Estado do Projeto")]
         [ValidateNever]
         public string StatusProjeto { get; set; }
-       
 
         [ForeignKey("ClienteId")]
         [ValidateNever]
         public int ClienteId { get; set; }
+
         [ValidateNever]
         public Cliente Cliente { get; set; }
+
         [ValidateNever]
         public ICollection<Funcionario> Funcionarios { get; set; }
+
         [ValidateNever]
         public ICollection<FuncionarioProjeto> FuncionarioProjetos { get; set; }
     }

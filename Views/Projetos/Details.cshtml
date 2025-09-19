@@ -46,9 +46,29 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.StatusProjeto)
         </dd>
+        <dt class="col-sm-2">
+            Funcionários
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.FuncionarioProjetos != null && Model.FuncionarioProjetos.Any())
+            {
+                <ul>
+                    @foreach (var fp in Model.FuncionarioProjetos)
+                    {
+                        <li>@fp.Funcionario.NomeFuncionario (@fp.Funcionario.Email)</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Sem funcionários atribuídos.</p>
+            }
+        </dd>
+        <dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Cliente)
         </dt>
+        </dd>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Cliente.Email)
         </dd>

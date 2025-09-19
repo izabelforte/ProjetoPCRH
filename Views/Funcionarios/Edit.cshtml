@@ -40,12 +40,13 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Ativo" /> @Html.DisplayNameFor(model => model.Ativo)
+                    <input class="form-check-input" asp-for="Ativo" id="chkAtivo" />
+                    @Html.DisplayNameFor(model => model.Ativo)
                 </label>
             </div>
             <div class="form-group">
                 <br />
-                <input type="submit" value="VEditar" class="btn btn-success" /> |
+                <input type="submit" value="Editar" class="btn btn-success" /> |
                 <a asp-action="Index" class="btn btn-primary">Voltar à lista</a>
             </div>
         </form>
@@ -54,4 +55,21 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById("chkAtivo").addEventListener("change", function (e) {
+            if (!this.checked) { // só quando desmarca
+                var funcionarioId = @Model.FuncionarioId;
+
+                fetch('/Funcionarios/VerificarProjetosEmAndamento?id=' + funcionarioId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.temProjetos) {
+                            alert("Este funcionário está em projetos em andamento e não pode ser desativado!");
+                            this.checked = true; // volta a marcar
+                        }
+                    });
+            }
+        });
+    </script>
+
 }
