@@ -89,29 +89,18 @@ namespace ProjetoPCRH.Controllers
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email");
-           
+
             // Funcionários (todos)
-            ViewBag.Funcionarios = new SelectList(_context.Funcionarios, "FuncionarioId", "NomeFuncionario");
+            ViewBag.Funcionarios = new SelectList(_context.Funcionarios.Where(f => f.Ativo), // apenas true
+                "FuncionarioId",
+                "NomeFuncionario"
+            );
 
             ViewBag.StatusProjeto = new SelectList(new List<string> { "Planeado", "Em andamento" });
             return View();
         }
 
-        //// POST: Projetos/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[AuthorizeRole("Administrador", "GestorProjeto")]
-        //public async Task<IActionResult> Create([Bind("ProjetoId,NomeProjeto,Descricao,DataInicio,DataFim,Orcamento,StatusProjeto,ClienteId")] Projeto projeto)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(projeto);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Email", projeto.ClienteId);
-        //    return View(projeto);
-        //}
+      
 
         // POST: Projetos/Create
         [HttpPost]

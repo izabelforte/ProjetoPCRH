@@ -35,10 +35,11 @@
     <tbody>
 @foreach (var item in Model) {
             
-                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / item.Projeto.Orcamento;
-                var Percent = Math.Abs(DesempenhoEquipa);
+               
                 var HorasPrevistas = (item.Projeto.DataFim - item.Projeto.DataInicio).TotalDays;
                 var HorasGastas = (@item.DataRelatorio - @item.Projeto.DataInicio).TotalDays;
+                var DesempenhoEquipa = (item.TempoTotalHoras * 100) / HorasPrevistas;
+                var Percent = Math.Abs(DesempenhoEquipa);
 
                
         <tr>
@@ -55,10 +56,10 @@
                 @item.Projeto.Orcamento
             </td>
             <td>
-                @item.TempoTotalHoras
+                @item.Valor
             </td>
             <td>
-                @if(item.TempoTotalHoras > item.Projeto.Orcamento)
+                @if(item.TempoTotalHoras > HorasPrevistas)
                 {
 
                         <p class="text-danger">@Percent.ToString("F2") %</p>
